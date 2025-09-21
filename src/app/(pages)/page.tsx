@@ -1,6 +1,9 @@
-import HeroSection from '@/components/Hero';
-import AdventagesSection from '@/components/Adventages';
-import HowItWorksSection from '@/components/HowItWorks';
+import HeroSection from '@/components/HeroSection';
+import AdventagesSection from '@/components/AdventagesSection';
+import HowItWorksSection from '@/components/HowItWorksSection';
+import CvUpgradeSection from '@/components/CvUpgradeSection';
+import ImproveLinkedinSection from '@/components/ImproveLinkedinSection';
+import JobMatchSection from '@/components/JobMatchSection';
 
 export default function HomePage() {
   return (
@@ -8,6 +11,9 @@ export default function HomePage() {
       <HeroSection />
       <AdventagesSection />
       <HowItWorksSection />
+      <CvUpgradeSection />
+      <ImproveLinkedinSection />
+      <JobMatchSection />
     </main>
   );
 }
