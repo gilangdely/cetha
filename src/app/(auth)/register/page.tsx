@@ -1,24 +1,55 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth, db } from "@/app/firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function RegisterPage() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [createUsers] = useCreateUserWithEmailAndPassword(auth);
+
+  const handleRegister = async (): Promise<void> => {
+    if (password !== confirmPassword) {
+      alert("Password dan konfirmasi password tidak sesuai!");
+      return;
+    }
+
+    try {
+      const res = await createUsers(email, password);
+      if (res && res.user) {
+        await setDoc(doc(db, "users", res.user.uid), {
+          uid: res.user.uid,
+          username,
+          email,
+          createdAt: new Date(),
+          role: "user",
+        });
+
+        console.log("Berhasil");
+      }
+    } catch (error) {
+      console.error("gagal membuat error", error);
+    }
+  };
+
   return (
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
       <section className="max-w-8xl mx-auto flex min-h-screen w-full flex-row gap-4">
-        {/* Right Panel (Static Image) */}
+        {/* Right Panel */}
         <div className="hidden w-full max-w-xl items-center justify-center p-5 lg:flex">
-          {/* Gambar akan tepat di tengah layar */}
           {/* <img src={carousel1.src} className="h-full w-full rounded-xl object-cover" /> */}
         </div>
 
         {/* Left Panel */}
         <div className="flex flex-1 p-5">
           <div className="flex flex-1 flex-col rounded-xl bg-white">
-            {/* Konten Tengah */}
             <div className="flex flex-1 items-center justify-center">
               <div className="flex w-full max-w-md flex-1 flex-col gap-4">
-                {/* Heading */}
                 <div className="flex flex-col gap-2 text-center">
                   <div className="text-TextPrimary text-3xl font-semibold">
                     Daftar Akun Baru
@@ -29,18 +60,18 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div className="flex w-full flex-col gap-1 mt-1">
+                <div className="mt-1 flex w-full flex-col gap-1">
                   <div className="text-TextPrimary text-sm font-medium">
                     Username
                   </div>
                   <input
                     type="username"
                     placeholder="Masukan username kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
-                {/* Form Login */}
                 <div className="flex w-full flex-col gap-1">
                   <div className="text-TextPrimary text-sm font-medium">
                     Email
@@ -48,7 +79,8 @@ export default function RegisterPage() {
                   <input
                     type="email"
                     placeholder="Masukan email kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
@@ -59,7 +91,8 @@ export default function RegisterPage() {
                   <input
                     type="password"
                     placeholder="Masukan password kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
@@ -70,25 +103,26 @@ export default function RegisterPage() {
                   <input
                     type="password"
                     placeholder="Masukan password kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
-                {/* Tombol Register */}
                 <div className="mt-2 w-full">
-                  <button className="bg-primaryBlue h-12 w-full cursor-pointer rounded-full font-semibold text-white">
+                  <button
+                    onClick={handleRegister}
+                    className="bg-primaryBlue h-12 w-full cursor-pointer rounded-full font-semibold text-white"
+                  >
                     Buat Akun
                   </button>
                 </div>
 
-                {/* Divider */}
                 <div className="flex items-center gap-6">
                   <div className="h-0.5 w-full rounded-lg bg-gray-200" />
                   <div className="text-TextSecondary text-sm">atau</div>
                   <div className="h-0.5 w-full rounded-lg bg-gray-200" />
                 </div>
 
-                {/* Tombol Login Sosial */}
                 <div className="flex w-full flex-col gap-4 lg:flex-row">
                   <div className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#E0E1E2] bg-[#F9FAFB]">
                     <svg className="h-5 w-5" viewBox="0 0 48 48">

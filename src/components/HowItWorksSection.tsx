@@ -69,25 +69,25 @@ const HowItWorksSection = () => {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 py-12">
       <div className="flex flex-col items-center text-center">
-        <div className="border-primaryBlue rounded-full border-2 px-5 py-2">
+        <div className="border-primaryBlue rounded-full border-2 px-3 py-1.5">
           <p className="text-primaryBlue font-medium">Cara Kerja Cetha</p>
         </div>
-        <h2 className="text-TextPrimary mt-4 text-3xl font-semibold md:text-4xl">
-          Cara Cetha Bantu Kamu Dapat <br className="hidden md:block" /> Kerjaan
-          Impian
-        </h2>
-        <p className="text-TextSecondary mt-4 max-w-2xl text-lg">
-          Ikuti langkah mudah ini untuk optimalkan CV, profil LinkedIn, dan
-          temukan lowongan yang paling cocok.
-        </p>
+        <div className="mt-2 flex-col text-center">
+          <h2 className="text-TextPrimary text-3xl font-semibold md:text-4xl">
+            Cara Cetha Bantu Kamu Dapat <br className="hidden md:block" />{" "}
+            Kerjaan Impian
+          </h2>
+          <p className="text-TextSecondary mt-4 max-w-2xl text-lg">
+            Ikuti langkah mudah ini untuk optimalkan CV, profil LinkedIn, dan
+            temukan lowongan yang paling cocok.
+          </p>
+        </div>
       </div>
 
       {/* Active Cards */}
       <div className="mt-10 flex flex-col gap-8">
         <div className="flex h-80 flex-row rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-          <div className="flex-1">
-            {/* <Image src={""} alt=""></Image> */}
-          </div>
+          <div className="flex-1">{/* <Image src={""} alt=""></Image> */}</div>
           {activeData ? (
             <div className="flex-1">
               <h3 className="text-primaryBlue/90 text-3xl font-semibold">
@@ -99,10 +99,10 @@ const HowItWorksSection = () => {
               <p className="text-TextSecondary my-3 text-lg font-medium">
                 {activeData.description}
               </p>
-              <hr className="rounded border-2 text-gray-200" />
+              <hr className="my-5 rounded border-2 text-gray-200/70" />
               <ul className="mt-4 flex flex-col gap-2">
                 {activeData.features.map((feature, index) => (
-                  <li key={index} className="flex items-start gap-2">
+                  <li key={index} className="flex items-start gap-3">
                     <CircleCheck className="text-primaryBlue mt-1" size={18} />
                     <p className="text-TextPrimary font-medium">
                       {feature?.highlight}{" "}

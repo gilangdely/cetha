@@ -37,11 +37,11 @@ const AdventagesSection = () => {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 pb-12">
       <div className="flex flex-col items-center text-center">
-        <div className="border-primaryBlue rounded-full border-2 px-5 py-2">
+        <div className="border-primaryBlue rounded-full border-2 px-3 py-1.5">
           <p className="text-primaryBlue font-medium">Kenapa Cetha</p>
         </div>
-        <div className="mt-4 max-w-3xl flex-col text-center">
-          <h2 className="text-TextPrimary mt-2 text-3xl font-semibold md:text-4xl">
+        <div className="mt-2 max-w-3xl flex-col text-center">
+          <h2 className="text-TextPrimary text-3xl font-semibold md:text-4xl">
             Cara Pintar Untuk Mencapai Karier <br className="hidden md:block" />{" "}
             Impianmu
           </h2>

@@ -36,7 +36,7 @@ export default function LoginPage() {
                   <input
                     type="email"
                     placeholder="Masukan email kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-TextPrimary border-gray-300 placeholder:text-gray-400"
                   />
                 </div>
 
@@ -47,7 +47,7 @@ export default function LoginPage() {
                   <input
                     type="password"
                     placeholder="Masukan password kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-gray-300 placeholder:text-gray-400"
+                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-TextPrimary border-gray-300 placeholder:text-gray-400"
                   />
                 </div>
 
