@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { MoveRight } from "lucide-react";
 
+import illustration from "@/assets/img/illustration-improve-cv.png"
+
 const CvUpgradeSection = () => {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 py-12">
@@ -30,7 +32,9 @@ const CvUpgradeSection = () => {
             <MoveRight size={20} className="text-primaryBlue" />
           </Link>
         </div>
-        <div className="flex-1">{/* <Image src={""} alt=""></Image> */}</div>
+        <div className="flex-1">
+          <Image src={illustration} alt="ilustrasi upgrade cv" className="lg:h-120 lg:w-120 lg:ml-24"></Image>
+        </div>
       </div>
     </section>
   );

@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import Image from "next/image";
 
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
+
+import logo from "@/assets/icons/logo-cetha.svg";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,8 +46,8 @@ const Navbar = () => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         <div className="flex items-center gap-10">
-          <Link href="/" className="text-primaryBlue text-2xl font-bold">
-            Cetha
+          <Link href="/">
+            <Image alt="logo cetha" src={logo} height={40}/>
           </Link>
           <ul className="flex gap-10 text-gray-700">
             <li
@@ -150,7 +153,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                href="/about"
+                href="/about-us"
                 className="hover:text-primaryBlue transition-colors"
               >
                 Tentang Kami

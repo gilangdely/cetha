@@ -3,13 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { MoveLeft, MoveRight } from "lucide-react";
+import { MoveLeft } from "lucide-react";
+
+import illustration from "@/assets/img/illustration-improve-linkedIn.png";
 
 const ImproveLinkedinSection = () => {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 py-12">
       <div className="flex w-full flex-col-reverse items-center gap-10 px-6 md:flex-row lg:px-0">
-        <div className="flex-1">{/* <Image src={""} alt=""></Image> */}</div>
+        <div className="flex-1">
+          <Image src={illustration} alt="ilustrasi improve" className="lg:h-full"></Image>
+        </div>
         <div className="flex-1">
           <div className="flex justify-end">
             <div className="border-primaryBlue w-fit rounded-full border-2 px-3 py-1.5">

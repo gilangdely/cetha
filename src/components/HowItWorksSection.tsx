@@ -90,7 +90,7 @@ const HowItWorksSection = () => {
           <div className="flex-1">{/* <Image src={""} alt=""></Image> */}</div>
           {activeData ? (
             <div className="flex-1">
-              <h3 className="text-primaryBlue/90 text-3xl font-semibold">
+              <h3 className="text-TextPrimary text-3xl font-semibold">
                 0{activeData.id}
               </h3>
               <p className="text-primaryBlue mt-2 text-3xl font-semibold">
