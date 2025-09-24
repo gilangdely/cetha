@@ -73,7 +73,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/cv-review"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Review CV
                   </Link>
@@ -81,7 +81,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/linkedin-review"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Review LinkedIn
                   </Link>
@@ -89,7 +89,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/career-tips"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Blog Karier
                   </Link>
@@ -97,7 +97,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/interview-guide"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Video Tips
                   </Link>
@@ -105,7 +105,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/pricing"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Harga
                   </Link>
@@ -113,7 +113,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/about"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Tentang Kami
                   </Link>
@@ -126,7 +126,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/faq"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     FAQ
                   </Link>
@@ -134,7 +134,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/contact"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Hubungi Kami
                   </Link>
@@ -142,7 +142,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/privacy"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Kebijakan Privasi
                   </Link>
@@ -150,7 +150,7 @@ const Footer = () => {
                 <li>
                   <Link
                     href="/terms"
-                    className="hover:text-accentOrange transition-colors"
+                    className="hover:underline hover:underline-offset-2"
                   >
                     Syarat & Ketentuan
                   </Link>

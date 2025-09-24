@@ -74,7 +74,7 @@ const Navbar = () => {
               >
                 <div className="py-2">
                   <Link
-                    href="/cv-review"
+                    href="/review-cv"
                     className="hover:text-primaryBlue block px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
                   >
                     <div className="font-medium">Review CV Instan</div>
@@ -83,10 +83,10 @@ const Navbar = () => {
                     </div>
                   </Link>
                   <Link
-                    href="/linkedin-review"
+                    href="/improve-linkedIn"
                     className="hover:text-primaryBlue block px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50"
                   >
-                    <div className="font-medium">Review Profile LinkedIn</div>
+                    <div className="font-medium">Improve Profile LinkedIn</div>
                     <div className="text-sm text-gray-500">
                       Optimalisasi profil LinkedIn Anda
                     </div>

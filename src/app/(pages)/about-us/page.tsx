@@ -120,6 +120,7 @@ export default function AboutUsPage() {
             <div className="flex-1">
               <Image
                 className="relative"
+                height={550}
                 draggable={false}
                 src={illustration}
                 alt="illustration about us"

@@ -71,13 +71,10 @@ const AdventagesSection = () => {
               </div>
               <Link
                 href=""
-                className="group hover:border-primaryBlue mt-4 inline-flex items-center gap-2 border-b-2  border-transparent w-fit font-medium"
+                className="group hover:border-primaryBlue mt-4 inline-flex w-fit items-center gap-2 border-b-2 border-transparent font-medium"
               >
                 <span className="text-primaryBlue">Coba sekarang</span>
-                <MoveRight
-                  size={20}
-                  className="text-primaryBlue"
-                />
+                <MoveRight size={20} className="text-primaryBlue" />
               </Link>
             </div>
           ))}

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { MoveRight } from "lucide-react";
 
-import illustration from "@/assets/img/illustration-improve-cv.png"
+import illustration from "@/assets/img/illustration-upgrade-cv.png"
 
 const CvUpgradeSection = () => {
   return (
@@ -33,7 +33,7 @@ const CvUpgradeSection = () => {
           </Link>
         </div>
         <div className="flex-1">
-          <Image src={illustration} alt="ilustrasi upgrade cv" className="lg:h-120 lg:w-120 lg:ml-24"></Image>
+          <Image src={illustration} alt="ilustrasi upgrade cv" className="lg:h-140 lg:w-140 lg:ml-24"></Image>
         </div>
       </div>
     </section>
