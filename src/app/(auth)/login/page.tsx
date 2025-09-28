@@ -1,8 +1,37 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { auth } from "@/app/lib/firebase"
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      alert("Email dan Password wajib diisi");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login berhasil!");
+      router.push("/"); // redirect ke halaman utama
+    } catch (error: any) {
+      console.error("Error saat login:", error);
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
       <section className="max-w-8xl mx-auto flex min-h-screen w-full flex-row gap-4">
@@ -29,14 +58,16 @@ export default function LoginPage() {
                 </div>
 
                 {/* Form Login */}
-                <div className="flex w-full flex-col gap-1 mt-1">
+                <div className="mt-1 flex w-full flex-col gap-1">
                   <div className="text-TextPrimary text-sm font-medium">
                     Email
                   </div>
                   <input
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     placeholder="Masukan email kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-TextPrimary border-gray-300 placeholder:text-gray-400"
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
@@ -46,8 +77,10 @@ export default function LoginPage() {
                   </div>
                   <input
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Masukan password kamu"
-                    className="h-10 rounded-xl border-2 bg-white px-3 text-sm text-TextPrimary border-gray-300 placeholder:text-gray-400"
+                    className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
 
@@ -58,7 +91,10 @@ export default function LoginPage() {
 
                 {/* Tombol Login */}
                 <div className="mt-2 w-full">
-                  <button className="bg-primaryBlue h-12 w-full cursor-pointer rounded-full font-semibold text-white">
+                  <button
+                    onClick={handleLogin}
+                    className="bg-primaryBlue h-12 w-full cursor-pointer rounded-full font-semibold text-white"
+                  >
                     Login
                   </button>
                 </div>
@@ -96,11 +132,11 @@ export default function LoginPage() {
                     </p>
                   </div>
                 </div>
-                <div className="text-TextSecondary text-center font-medium mt-5">
+                <div className="text-TextSecondary mt-5 text-center font-medium">
                   <p className="hidden lg:inline">{"Belum ada akun? "}</p>
                   <Link
                     href={"/register"}
-                    className="text-primaryBlue hover:underline underliner-offset-2"
+                    className="text-primaryBlue underliner-offset-2 hover:underline"
                   >
                     Daftar
                   </Link>

@@ -1,39 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, db } from "@/app/firebase/config";
-import { doc, setDoc } from "firebase/firestore";
+import { registerUser } from "@/app/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const [createUsers] = useCreateUserWithEmailAndPassword(auth);
-
-  const handleRegister = async (): Promise<void> => {
-    if (password !== confirmPassword) {
-      alert("Password dan konfirmasi password tidak sesuai!");
+  const handleRegister = async () => {
+    if (!username || !email || !password || !confirmPassword) {
+      alert("semua field harus diisi!");
       return;
     }
 
+    setLoading(true);
     try {
-      const res = await createUsers(email, password);
-      if (res && res.user) {
-        await setDoc(doc(db, "users", res.user.uid), {
-          uid: res.user.uid,
-          username,
-          email,
-          createdAt: new Date(),
-          role: "user",
-        });
-
-        console.log("Berhasil");
-      }
-    } catch (error) {
-      console.error("gagal membuat error", error);
+      await registerUser(username, email, password, confirmPassword);
+      alert("Registrasi berhasil!");
+      router.push("/");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
