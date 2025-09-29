@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/app/lib/firebase"
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { loginUser, loginWithGoogle } from "@/app/lib/auth";
+import AuthCarousel from "@/components/AuthCarousel";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,12 +18,11 @@ export default function LoginPage() {
       alert("Email dan Password wajib diisi");
       return;
     }
-
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await loginUser(email, password);
       alert("Login berhasil!");
-      router.push("/"); // redirect ke halaman utama
+      router.push("/");
     } catch (error: any) {
       console.error("Error saat login:", error);
       alert(error.message);
@@ -32,22 +31,28 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const user = await loginWithGoogle();
+      alert(`Selamat datang, ${user.displayName}!`);
+      router.push("/");
+    } catch (error: any) {
+      console.error("Error saat login dengan Google:", error);
+      alert(error.message);
+    }
+  };
+
   return (
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
-      <section className="max-w-8xl mx-auto flex min-h-screen w-full flex-row gap-4">
-        {/* Right Panel (Static Image) */}
-        <div className="hidden w-full max-w-xl items-center justify-center p-5 lg:flex">
-          {/* Gambar akan tepat di tengah layar */}
-          {/* <img src={carousel1.src} className="h-full w-full rounded-xl object-cover" /> */}
-        </div>
+      <section className="max-w-8xl mx-auto flex min-h-screen w-full flex-row">
+        {/* Right Panel */}
+        <AuthCarousel />
 
         {/* Left Panel */}
         <div className="flex flex-1 p-5">
           <div className="flex flex-1 flex-col rounded-xl bg-white">
-            {/* Konten Tengah */}
             <div className="flex flex-1 items-center justify-center">
               <div className="flex w-full max-w-md flex-1 flex-col gap-4">
-                {/* Heading */}
                 <div className="flex flex-col gap-2 text-center">
                   <div className="text-TextPrimary text-3xl font-semibold">
                     Hai, senang melihatmu lagi!
@@ -108,7 +113,10 @@ export default function LoginPage() {
 
                 {/* Tombol Login Sosial */}
                 <div className="flex w-full flex-col gap-4 lg:flex-row">
-                  <div className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#E0E1E2] bg-[#F9FAFB]">
+                  <button
+                    onClick={handleGoogleLogin}
+                    className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#E0E1E2] bg-[#F9FAFB]"
+                  >
                     <svg className="h-5 w-5" viewBox="0 0 48 48">
                       <path
                         fill="#fbc02d"
@@ -130,7 +138,7 @@ export default function LoginPage() {
                     <p className="text-TextPrimary font-medium">
                       Login dengan Google
                     </p>
-                  </div>
+                  </button>
                 </div>
                 <div className="text-TextSecondary mt-5 text-center font-medium">
                   <p className="hidden lg:inline">{"Belum ada akun? "}</p>

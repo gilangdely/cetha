@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { registerUser } from "@/app/lib/auth";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
+import AuthCarousel from "@/components/AuthCarousel";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -34,9 +36,7 @@ export default function RegisterPage() {
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
       <section className="max-w-8xl mx-auto flex min-h-screen w-full flex-row gap-4">
         {/* Right Panel */}
-        <div className="hidden w-full max-w-xl items-center justify-center p-5 lg:flex">
-          {/* <img src={carousel1.src} className="h-full w-full rounded-xl object-cover" /> */}
-        </div>
+        <AuthCarousel />
 
         {/* Left Panel */}
         <div className="flex flex-1 p-5">
