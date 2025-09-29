@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { Send, CircleCheck } from "lucide-react";
-import illustration from "@/assets/img/illustration-hero.png";
+import illustration from "@/assets/img/illustration-hero.jpg";
 
 const HeroSection = () => {
   return (

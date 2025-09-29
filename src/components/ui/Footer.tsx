@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail, MapPin, Phone, Facebook, Instagram, Globe } from "lucide-react";
 
-import logo from "@/assets/icons/logo-cetha.svg";
+import logo from "@/assets/icons/cetha-logo-white.svg";
 
 const Footer = () => {
   return (
@@ -25,7 +25,7 @@ const Footer = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <Link href="/" className="flex items-center gap-3">
-            <Image src={logo} alt="logo" height={35} />
+            <Image src={logo} alt="logo" />
           </Link>
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400">
             Menjelajahi dunia herbal dengan AI, terinspirasi oleh tradisi
@@ -72,7 +72,7 @@ const Footer = () => {
               <ul className="space-y-2">
                 <li>
                   <Link
-                    href="/cv-review"
+                    href="/review-cv"
                     className="hover:underline hover:underline-offset-2"
                   >
                     Review CV
@@ -80,7 +80,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/linkedin-review"
+                    href="/improve-linkedIn"
                     className="hover:underline hover:underline-offset-2"
                   >
                     Review LinkedIn
@@ -186,7 +186,7 @@ const Footer = () => {
 
       {/* Copyright Strip */}
       <div className="mt-10 border-t border-gray-700 py-4 text-center text-xs text-white">
-        © {new Date().getFullYear()} Daunesia. All rights reserved.
+        © {new Date().getFullYear()} Cetha. All rights reserved.
       </div>
     </motion.footer>
   );

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { ChevronRight } from "lucide-react";
 
-import illustration from "@/assets/img/illustration-linkedIn-standout.png";
+import illustration from "@/assets/img/illustration-improve-linkedIn.jpg";
 import pen from "@/assets/icons/pen.svg";
 import streamLine from "@/assets/icons/list-edit-streamline.svg";
 import maskHappy from "@/assets/icons/mask-happy.svg";
@@ -65,7 +65,7 @@ export default function ReviewCVPage() {
             </div>
             <div className="flex-1">
               <Image
-                className="relative lg:h-140 lg:w-140"
+                className="relative"
                 draggable={false}
                 src={illustration}
                 alt="illustration review cv"

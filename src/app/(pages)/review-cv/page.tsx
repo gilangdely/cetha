@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import { ChevronRight } from "lucide-react";
 
-import illustration from "@/assets/img/illustration-better.png";
+import illustration from "@/assets/img/illustration-review-cv.jpg";
 import logo from "@/assets//icons/upload-docs.svg";
 
 export default function ReviewCVPage() {
@@ -40,7 +40,7 @@ export default function ReviewCVPage() {
             </div>
             <div className="flex-1">
               <Image
-                className="relative lg:h-140 lg:w-140"
+                className="relative"
                 draggable={false}
                 src={illustration}
                 alt="illustration review cv"

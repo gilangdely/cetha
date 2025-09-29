@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 
-import logo from "@/assets/icons/logo-cetha.svg";
+import logo from "@/assets/icons/cetha-logo.svg";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -47,7 +47,7 @@ const Navbar = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         <div className="flex items-center gap-10">
           <Link href="/">
-            <Image alt="logo cetha" src={logo} height={40}/>
+            <Image alt="logo cetha" src={logo} height={50} className="relative"/>
           </Link>
           <ul className="flex gap-10 text-gray-700">
             <li

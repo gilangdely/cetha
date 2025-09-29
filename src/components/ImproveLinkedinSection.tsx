@@ -5,14 +5,14 @@ import Link from "next/link";
 
 import { MoveLeft } from "lucide-react";
 
-import illustration from "@/assets/img/illustration-improve-linkedIn.png";
+import illustration from "@/assets/img/illustration-optimize-linkedIn.jpg";
 
 const ImproveLinkedinSection = () => {
   return (
     <section className="mx-auto w-full max-w-7xl px-6 py-12">
       <div className="flex w-full flex-col-reverse items-center gap-10 px-6 md:flex-row lg:px-0">
         <div className="flex-1">
-          <Image src={illustration} alt="ilustrasi improve" className="lg:h-full"></Image>
+          <Image src={illustration} alt="ilustrasi improve" />
         </div>
         <div className="flex-1">
           <div className="flex justify-end">
@@ -34,7 +34,7 @@ const ImproveLinkedinSection = () => {
           </div>
           <div className="flex justify-end">
             <Link
-              href=""
+              href={"/improve-linkedIn"}
               className="group hover:border-primaryBlue mt-8 inline-flex w-fit items-center gap-2 border-b-2 border-transparent font-medium"
             >
               <MoveLeft size={20} className="text-primaryBlue" />

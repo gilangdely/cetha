@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { MoveRight } from "lucide-react";
 
-import illustration from "@/assets/img/illustration-upgrade-cv.png"
+import illustration from "@/assets/img/illustration-upgrade-cv.jpg";
 
 const CvUpgradeSection = () => {
   return (
@@ -25,7 +25,7 @@ const CvUpgradeSection = () => {
             </p>
           </div>
           <Link
-            href=""
+            href={"/review-cv"}
             className="group hover:border-primaryBlue mt-8 inline-flex w-fit items-center gap-2 border-b-2 border-transparent font-medium"
           >
             <span className="text-primaryBlue">Coba sekarang</span>
@@ -33,7 +33,7 @@ const CvUpgradeSection = () => {
           </Link>
         </div>
         <div className="flex-1">
-          <Image src={illustration} alt="ilustrasi upgrade cv" className="lg:h-140 lg:w-140 lg:ml-24"></Image>
+          <Image src={illustration} alt="ilustrasi upgrade cv" />
         </div>
       </div>
     </section>
