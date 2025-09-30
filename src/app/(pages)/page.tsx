@@ -1,10 +1,10 @@
-import HeroSection from '@/components/ui/HeroSection';
-import AdventagesSection from '@/components/ui/AdventagesSection';
-import HowItWorksSection from '@/components/ui/HowItWorksSection';
-import CvUpgradeSection from '@/components/ui/CvUpgradeSection';
-import ImproveLinkedinSection from '@/components/ui/ImproveLinkedinSection';
-import CtaSection from '@/components/ui/CtaSection';
-import JobMatchSection from '@/components/ui/JobMatchSection';
+import HeroSection from '@/components/sections/HeroSection';
+import AdventagesSection from '@/components/sections/AdventagesSection';
+import HowItWorksSection from '@/components/sections/HowItWorksSection';
+import CvUpgradeSection from '@/components/sections/CvUpgradeSection';
+import ImproveLinkedinSection from '@/components/sections/ImproveLinkedinSection';
+import CtaSection from '@/components/sections/CtaSection';
+import JobMatchSection from '@/components/sections/JobMatchSection';
 
 export default function HomePage() {
   return (
