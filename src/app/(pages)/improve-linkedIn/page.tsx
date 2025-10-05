@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ArrowRight } from "lucide-react";
 
 import illustration from "@/assets/img/illustration-improve-linkedIn.jpg";
 import pen from "@/assets/icons/pen.svg";
@@ -55,13 +55,30 @@ export default function ReviewCVPage() {
                     Improve Profile LinkedIn
                   </span>
                 </span>
-                Profil LinkedIn Lebih Standout
+                Profil <span className="text-accentOrange">LinkedIn Lebih Standout</span>
               </h2>
               <p className="text-TextSecondary mt-3 text-lg">
                 Masukkan URL LinkedIn kamu, biarkan AI menganalisis headline,
                 summary, dan skill. Dapatkan saran kata kunci dan tips supaya
                 recruiter lebih mudah menemukan kamu.
               </p>
+              <div className="mx-auto w-full mt-8">
+                <h2 className="text-TextSecondary mb-2 font-medium">
+                  Masukan URL profil LinkedIn Kamu
+                </h2>
+                <div className="flex w-full gap-2">
+                  <input
+                    type="text"
+                    placeholder="Masukan username atau URL profil LinkedIn kamu"
+                    className="flex-1 rounded-full border px-4 py-3"
+                  />
+                  <button
+                    className="bg-primaryBlue rounded-full px-3 py-3 font-medium text-white"
+                  >
+                    <ArrowRight />
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="flex-1">
               <Image
@@ -73,25 +90,8 @@ export default function ReviewCVPage() {
             </div>
           </div>
         </div>
-        <div className="mx-auto h-80 w-full max-w-7xl px-6">
-          <h2 className="text-TextPrimary mb-2 font-medium">
-            Masukan URL profil LinkedIn Kamu
-          </h2>
-          <div className="flex w-full gap-2">
-            <input
-              type="text"
-              placeholder="Masukan username atau URL profil LinkedIn kamu"
-              className="flex-1 rounded-full border px-4 py-3"
-            />
-            <Link
-              href={""}
-              className="bg-primaryBlue rounded-full px-4 py-3 font-medium text-white"
-            >
-              Review Sekarang
-            </Link>
-          </div>
-        </div>
-        <div className="mx-auto w-full max-w-7xl px-6 py-12">
+
+        <div className="mx-auto w-full max-w-7xl px-6 pb-12">
           <div className="flex flex-col items-center text-center">
             <div className="border-primaryBlue rounded-full border-2 px-3 py-1.5">
               <p className="text-primaryBlue font-medium">Cara kerja</p>

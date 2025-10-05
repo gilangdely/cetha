@@ -108,7 +108,7 @@ const Navbar = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white/80 shadow-lg backdrop-blur-md"
+                      className="absolute top-full left-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-md"
                     >
                       <div className="py-2">
                         {link.children.map((child) => (

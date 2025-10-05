@@ -1,43 +1,45 @@
-import { NextRequest } from "next/server";
-import { Client, handle_file } from "@gradio/client"
+import { NextRequest, NextResponse } from "next/server";
+import { Client, handle_file } from "@gradio/client";
+
+const ALLOWED_TYPE = "application/pdf";
 
 export const POST = async (req: NextRequest) => {
-  const formData = await req.formData();
-  const file = formData.get("file") as File | null;
+  try {
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
 
-  if (!file) {
-    return Response.json({ error: "Tidak ada file" }, { status: 400 });
-  }
+    if (!file) {
+      return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 });
+    }
 
-  // Validasi format file
-  const allowedTypes = [
-    "application/pdf", // PDF
-    "application/msword", // .doc
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-  ];
+    if (file.type !== ALLOWED_TYPE) {
+      return NextResponse.json(
+        { error: `Format file tidak didukung: ${file.type}. Harus PDF.` },
+        { status: 400 }
+      );
+    }
 
-  if (!allowedTypes.includes(file.type)) {
-    return Response.json(
-      { error: `Format file tidak didukung (${file.type})` },
-      { status: 400 },
+    // Connect ke HuggingFace Space
+    const app = await Client.connect("firmanaziz/CV2");
+
+    // ✅ Paling aman: gunakan handle_file langsung
+    const result = await app.predict("/score_cv", [handle_file(file)]);
+
+    return NextResponse.json({
+      success: true,
+      message: "File PDF berhasil diproses",
+      file: {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+      },
+      result,
+    });
+  } catch (error) {
+    console.error("❌ API Upload Error:", error);
+    return NextResponse.json(
+      { error: "Terjadi kesalahan saat memproses file" },
+      { status: 500 }
     );
   }
-
-  const buffer = await file.arrayBuffer();
-  const app = await Client.connect("firmanaziz/CV2")
-
-  const result = await app.predict("/score_cv", [handle_file(Buffer.from(buffer))]);
-
-  // Info file
-  const fileName = file.name;
-  const fileType = file.type;
-  const fileSize = file.size;
-
-  return Response.json({
-    message: "File diterima",
-    fileName,
-    fileType,
-    fileSize,
-    result
-  });
 };
