@@ -3,7 +3,6 @@
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import { motion } from "motion/react";

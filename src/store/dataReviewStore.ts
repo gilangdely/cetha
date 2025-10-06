@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface ReviewData {
     fileName: string;
@@ -13,8 +14,15 @@ interface DataReviewStore {
     clearReviewData: () => void;
 }
 
-export const useDataReviewStore = create<DataReviewStore>((set) => ({
-    reviewData: null,
-    setReviewData: (data) => set({ reviewData: data }),
-    clearReviewData: () => set({ reviewData: null }),
-}));
+export const useDataReviewStore = create<DataReviewStore>()(
+    persist(
+        (set) => ({
+            reviewData: null,
+            setReviewData: (data) => set({ reviewData: data }),
+            clearReviewData: () => set({ reviewData: null }),
+        }),
+        {
+            name: "review-data-storage",
+        },
+    ),
+);

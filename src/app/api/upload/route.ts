@@ -33,8 +33,13 @@ export const POST = async (req: NextRequest) => {
         const result = await app.predict("/score_cv", [handle_file(fileUrl)]);
 
         return NextResponse.json({ result });
-    } catch (error) {
+    } catch (error: any) {
         console.error("❌ API Upload Error:", error);
-        return NextResponse.json({ error: "Terjadi kesalahan saat memproses file" }, { status: 500 });
+
+        if (error.response?.status === 429) {
+            return NextResponse.json({ error: "Kuota API telah terlampaui. Silakan coba lagi beberapa saat lagi." }, { status: 429 });
+        }
+
+        return NextResponse.json({ error: "Terjadi kesalahan saat memproses file." }, { status: 500 });
     }
 };
