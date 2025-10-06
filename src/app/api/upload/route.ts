@@ -1,45 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Client, handle_file } from "@gradio/client";
+import { Client, handle_file, upload_files } from "@gradio/client";
 
-const ALLOWED_TYPE = "application/pdf";
+const validateFile = (file: File | null): string | null => {
+    if (!file) return "File tidak ditemukan";
+    if (file.type !== "application/pdf") {
+        return `Format file tidak didukung: ${file.type}. Harus PDF.`;
+    }
+    return null;
+};
+
+const getFileUrl = (filename: string): string => `https://firmanaziz-cv2.hf.space/gradio_api/file=${filename}`;
 
 export const POST = async (req: NextRequest) => {
-  try {
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
+    try {
+        const formData = await req.formData();
+        const file = formData.get("file") as File | null;
 
-    if (!file) {
-      return NextResponse.json({ error: "File tidak ditemukan" }, { status: 400 });
+        const validationError = validateFile(file);
+        if (validationError) {
+            return NextResponse.json({ error: validationError }, { status: 400 });
+        }
+
+        const app = await Client.connect("firmanaziz/CV2");
+        const root = app.config?.root;
+        if (!root) {
+            throw new Error("Konfigurasi root tidak ditemukan");
+        }
+
+        const { files } = await upload_files.call(app, root, [file!]);
+        const fileUrl = getFileUrl(files![0]);
+
+        const result = await app.predict("/score_cv", [handle_file(fileUrl)]);
+
+        return NextResponse.json({ result });
+    } catch (error) {
+        console.error("❌ API Upload Error:", error);
+        return NextResponse.json({ error: "Terjadi kesalahan saat memproses file" }, { status: 500 });
     }
-
-    if (file.type !== ALLOWED_TYPE) {
-      return NextResponse.json(
-        { error: `Format file tidak didukung: ${file.type}. Harus PDF.` },
-        { status: 400 }
-      );
-    }
-
-    // Connect ke HuggingFace Space
-    const app = await Client.connect("firmanaziz/CV2");
-
-    // ✅ Paling aman: gunakan handle_file langsung
-    const result = await app.predict("/score_cv", [handle_file(file)]);
-
-    return NextResponse.json({
-      success: true,
-      message: "File PDF berhasil diproses",
-      file: {
-        name: file.name,
-        type: file.type,
-        size: file.size,
-      },
-      result,
-    });
-  } catch (error) {
-    console.error("❌ API Upload Error:", error);
-    return NextResponse.json(
-      { error: "Terjadi kesalahan saat memproses file" },
-      { status: 500 }
-    );
-  }
 };
