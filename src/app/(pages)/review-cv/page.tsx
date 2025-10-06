@@ -5,19 +5,36 @@ import Image from "next/image";
 import axios from "axios";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { useDataReviewStore } from "@/store/dataReviewStore";
 
 import illustration from "@/assets/img/illustration-review-cv.jpg";
 import logo from "@/assets/icons/upload-docs.svg";
 import office from "@/assets/icons/office-docsx.svg";
+import LoadingScreen from "@/components/Loading";
 
 export default function ReviewCVPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadEnabled, setUploadEnabled] = useState(true);
+  const [progress, setProgress] = useState<number>(0);
+
+  const router = useRouter();
+  const setReviewData = useDataReviewStore((state) => state.setReviewData);
+
+  // Helper: Buat preview jika file PDF
+  const generatePreview = (file: File) => {
+    if (file.type === "application/pdf") {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    } else {
+      setPreviewUrl(null);
+    }
+  };
 
   // Saat pilih file
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,14 +42,23 @@ export default function ReviewCVPage() {
     if (!file) return;
 
     setSelectedFile(file);
+    generatePreview(file);
+  };
 
-    // Kalau PDF → buat blob URL
-    if (file.type === "application/pdf") {
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-    } else {
-      setPreviewUrl(null);
-    }
+  // Saat drag & drop file
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    if (!uploadEnabled) return;
+
+    const file = event.dataTransfer.files?.[0];
+    if (!file) return;
+
+    setSelectedFile(file);
+    generatePreview(file);
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
   };
 
   // Upload file ke backend
@@ -47,39 +73,35 @@ export default function ReviewCVPage() {
 
     try {
       setUploading(true);
+      setProgress(0);
+
       const res = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (event) => {
+          const percent = event.total
+            ? Math.round((event.loaded * 100) / event.total)
+            : 0;
+          setProgress(percent);
+        },
       });
 
-      console.log("Respon server:", res.data); // <-- tampilkan di console
-      console.log("Hasil prediksi HuggingFace:", res.data.result); // fokus ke output dari model
-
       toast.success("File berhasil diunggah!");
+      console.log("Respon server:", res.data);
+
+      setReviewData({
+        fileName: selectedFile.name,
+        fileType: selectedFile.type,
+        fileUrl: "", // bisa dikosongkan jika server tidak mengembalikan URL
+        result: res.data.result.data,
+      });
+
+      router.push("/result");
     } catch (err: any) {
       console.error("Upload gagal:", err.response?.data || err.message);
       toast.error("Gagal Upload");
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    if (!uploadEnabled) return;
-    const file = event.dataTransfer.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-      if (file.type === "application/pdf") {
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
-      } else {
-        setPreviewUrl(null);
-      }
-    }
-  };
-
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
   };
 
   return (
@@ -231,11 +253,12 @@ export default function ReviewCVPage() {
                       disabled={uploading}
                       className="bg-primaryBlue flex cursor-pointer items-center gap-1 rounded-full px-4 py-2.5 font-medium text-white disabled:opacity-50"
                     >
-                      {uploading ? "Mengunggah..." : "Analisis Sekarang"}
+                      Prediksi Sekarang
                       <ChevronRight size={18} />
                     </button>
                   </div>
                 </div>
+                {uploading && <LoadingScreen progress={progress} />}
               </div>
             </div>
             <div className="flex-1">
