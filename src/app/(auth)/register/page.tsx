@@ -13,6 +13,7 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleRegister = async () => {
     if (!username || !email || !password || !confirmPassword) {
@@ -24,9 +25,13 @@ export default function RegisterPage() {
     try {
       await registerUser(username, email, password, confirmPassword);
       alert("Registrasi berhasil!");
-      router.push("/");
+      router.push("/login");
     } catch (error: any) {
-      alert(error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMsg("Email telah terdaftar, gunakan email lain.")
+      }else{
+        setErrorMsg('Gagal Registrasi : '+error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -109,6 +114,8 @@ export default function RegisterPage() {
                     Buat Akun
                   </button>
                 </div>
+
+                {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
 
                 <div className="flex items-center gap-6">
                   <div className="h-0.5 w-full rounded-lg bg-gray-200" />

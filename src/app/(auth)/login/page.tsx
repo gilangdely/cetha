@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser, loginWithGoogle } from "@/app/lib/auth";
 import AuthCarousel from "@/components/AuthCarousel";
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "@/app/lib/firebase"
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,6 +14,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -22,10 +26,16 @@ export default function LoginPage() {
     try {
       await loginUser(email, password);
       alert("Login berhasil!");
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
-      console.error("Error saat login:", error);
-      alert(error.message);
+      console.log("Error login : "+error);
+      if (error.code === "auth/wrong-password") {
+        setErrorMsg("Password salah. Coba lagi.")
+      } else if (error.code === "auth/user-not-found") {
+        setErrorMsg("Email belum terdaftar.")
+      } else {
+        setErrorMsg("Email atau password yang kamu masukkan tidak cocok.")
+      }
     } finally {
       setLoading(false);
     }
@@ -35,12 +45,22 @@ export default function LoginPage() {
     try {
       const user = await loginWithGoogle();
       alert(`Selamat datang, ${user.displayName}!`);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error: any) {
       console.error("Error saat login dengan Google:", error);
       alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/dashboard") // ✅ Redirect kalau sudah login
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
 
   return (
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
@@ -88,6 +108,8 @@ export default function LoginPage() {
                     className="text-TextPrimary h-10 rounded-xl border-2 border-gray-300 bg-white px-3 text-sm placeholder:text-gray-400"
                   />
                 </div>
+
+                {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
 
                 {/* Lupa Password */}
                 <div className="text-primaryBlue -mt-2 mb-2 text-start font-medium underline-offset-2 hover:underline">
