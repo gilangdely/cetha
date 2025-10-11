@@ -1,12 +1,26 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, ChevronRight, Menu, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  ChevronRight,
+  Menu,
+  X,
+  LogOut,
+  User,
+  Settings,
+} from "lucide-react";
 
 import logo from "@/assets/icons/cetha-logo.svg";
+import { Avatar } from "@radix-ui/react-avatar";
+import UserAvatar from "../user-avatar";
+import { logoutUser } from "@/app/lib/auth";
+import { auth } from "@/app/lib/firebase";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   {
@@ -42,13 +56,45 @@ const navLinks = [
     ],
   },
   { label: "Harga", href: "/daftar-harga" },
-  { label: "Tentang Kami", href: "tentang-kami" },
+  { label: "Tentang Kami", href: "/tentang-kami" },
 ];
 
 const Navbar = () => {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [username, setUsername] = useState("Cetha");
+  const [email, setEmail] = useState("m@example.com");
+  const [openAvatarMenu, setOpenAvatarMenu] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  
+  const avatarMenuRef = useRef<HTMLDivElement>(null);
+  const desktopAvatarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUsername(user.displayName || user.email?.split("@")[0] || "Pengguna");
+        setEmail(user.email || "m@example.com");
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setOpenAvatarMenu(false);
+      setIsMobileMenuOpen(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,98 +108,158 @@ const Navbar = () => {
     setActiveDropdown(activeDropdown === key ? null : key);
   };
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
+    setOpenAvatarMenu(false);
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
         isMobileMenuOpen
-          ? "bg-white shadow-sm" 
+          ? "bg-white shadow-sm"
           : isScrolled
-            ? "bg-white/80 shadow-sm backdrop-blur-md" 
-            : "bg-transparent"
+          ? "bg-white/80 shadow-sm backdrop-blur-md"
+          : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center z-10">
           <Image alt="Cetha Logo" src={logo} height={45} />
         </Link>
 
         {/* Desktop Nav */}
-        <ul className="hidden items-center gap-10 text-gray-700 md:flex">
-          {navLinks.map((link) =>
-            link.children ? (
-              <li
-                key={link.key}
-                className="relative"
-                onMouseEnter={() => setActiveDropdown(link.key)}
-                onMouseLeave={() => setActiveDropdown(null)}
+        <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+          <ul className="flex items-center gap-10 text-gray-700">
+            {navLinks.map((link) =>
+              link.children ? (
+                <li
+                  key={link.key}
+                  className="relative"
+                  onMouseEnter={() => setActiveDropdown(link.key)}
+                  onMouseLeave={() => setActiveDropdown(null)}
+                >
+                  <button
+                    onClick={() => toggleDropdown(link.key!)}
+                    className="hover:text-primaryBlue flex items-center gap-1 transition-colors whitespace-nowrap"
+                  >
+                    {link.label}
+                    {activeDropdown === link.key ? (
+                      <ChevronUp size={18} />
+                    ) : (
+                      <ChevronDown size={18} />
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {activeDropdown === link.key && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-md"
+                      >
+                        <div className="py-2">
+                          {link.children.map((child) => (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              className="hover:text-primaryBlue block px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50/60"
+                            >
+                              <div className="font-medium">{child.title}</div>
+                              <div className="text-sm text-gray-500">
+                                {child.desc}
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </li>
+              ) : (
+                <li key={link.label}>
+                  <Link
+                    href={link.href!}
+                    className="hover:text-primaryBlue transition-colors whitespace-nowrap"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ),
+            )}
+          </ul>
+        </div>
+
+        {/* Avatar + Auth - Desktop */}
+        <div className="hidden md:block z-10" ref={desktopAvatarRef}>
+          {!isLoggedIn ? (
+            <Link
+              href="/login"
+              className="bg-primaryBlue hover:bg-primaryBlue/90 flex items-center justify-center rounded-full px-4 py-2.5 font-medium text-white transition-colors"
+            >
+              Masuk <ChevronRight size={20} />
+            </Link>
+          ) : (
+            <div className="relative">
+              <button
+                onClick={() => setOpenAvatarMenu(!openAvatarMenu)}
+                className="flex w-full items-center gap-3 rounded-lg px-2 py-2 transition hover:bg-gray-50"
               >
-                <button
-                  onClick={() => toggleDropdown(link.key!)}
-                  className="hover:text-primaryBlue flex items-center gap-1 transition-colors"
-                >
-                  {link.label}
-                  {activeDropdown === link.key ? (
-                    <ChevronUp size={18} />
-                  ) : (
-                    <ChevronDown size={18} />
-                  )}
-                </button>
+                <Avatar>
+                  <UserAvatar />
+                </Avatar>
+                <div className="flex flex-col text-left">
+                  <span className="text-sm font-medium text-gray-800">
+                    Hai, {username}
+                  </span>
+                  <span className="text-xs text-gray-500">Lihat profil</span>
+                </div>
+              </button>
 
-                {/* Dropdown */}
-                <AnimatePresence>
-                  {activeDropdown === link.key && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute top-full left-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white shadow-lg backdrop-blur-md"
+              <AnimatePresence>
+                {openAvatarMenu && (
+                  <motion.div
+                    ref={avatarMenuRef}
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 flex flex-col rounded-lg border border-gray-200 bg-white shadow-md w-48"
+                  >
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                      onClick={() => setOpenAvatarMenu(false)}
                     >
-                      <div className="py-2">
-                        {link.children.map((child) => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="hover:text-primaryBlue block px-4 py-3 text-gray-700 transition-colors hover:bg-gray-50/60"
-                          >
-                            <div className="font-medium">{child.title}</div>
-                            <div className="text-sm text-gray-500">
-                              {child.desc}
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </li>
-            ) : (
-              <li key={link.label}>
-                <Link
-                  href={link.href!}
-                  className="hover:text-primaryBlue transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ),
+                      <User size={16} /> Dashboard
+                    </Link>
+                    <Link
+                      href="/settings"
+                      className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                      onClick={() => setOpenAvatarMenu(false)}
+                    >
+                      <Settings size={16} /> Pengaturan
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex w-full items-center gap-2 px-4 py-2 text-left text-gray-700 hover:bg-gray-50"
+                    >
+                      <LogOut size={16} /> Keluar
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           )}
-        </ul>
-
-        {/* CTA */}
-        <div className="hidden md:block">
-          <Link
-            href="/login"
-            className="bg-primaryBlue hover:bg-primaryBlue/90 flex items-center rounded-full px-4 py-2.5 font-medium text-white transition-colors"
-          >
-            Masuk <ChevronRight size={20} />
-          </Link>
         </div>
 
         {/* Mobile Toggle */}
         <button
-          className="rounded-lg p-2 transition hover:bg-gray-100 md:hidden"
+          className="rounded-lg p-2 transition hover:bg-gray-100 md:hidden z-10"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -168,9 +274,71 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="bg-white/80 shadow-md backdrop-blur-md md:hidden"
+            className="bg-white/95 shadow-md backdrop-blur-md md:hidden"
           >
-            <div className="flex flex-col space-y-3 p-4">
+            <div className="flex flex-col space-y-4 p-4">
+              {/* Avatar & Username di atas - Mobile */}
+              {isLoggedIn && (
+                <div className="border-b border-gray-200 pb-3">
+                  <button
+                    onClick={() => setOpenAvatarMenu(!openAvatarMenu)}
+                    className="flex w-full items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <UserAvatar />
+                      </Avatar>
+                      <div className="flex flex-col text-left">
+                        <span className="text-sm font-medium text-gray-800">
+                          Hai, {username}
+                        </span>
+                        <span className="text-xs text-gray-500">{email}</span>
+                      </div>
+                    </div>
+                    {openAvatarMenu ? (
+                      <ChevronUp size={18} className="text-gray-500" />
+                    ) : (
+                      <ChevronDown size={18} className="text-gray-500" />
+                    )}
+                  </button>
+
+                  {/* Avatar Dropdown Menu - Mobile */}
+                  <AnimatePresence>
+                    {openAvatarMenu && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="mt-3 flex flex-col space-y-1 border-t border-gray-100 pt-3 overflow-hidden"
+                      >
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+                          onClick={closeMobileMenu}
+                        >
+                          <User size={16} /> Dashboard
+                        </Link>
+                        <Link
+                          href="/settings"
+                          className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+                          onClick={closeMobileMenu}
+                        >
+                          <Settings size={16} /> Pengaturan
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-gray-700 hover:bg-gray-50 rounded-md"
+                        >
+                          <LogOut size={16} /> Keluar
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+
+              {/* Nav Links */}
               {navLinks.map((link) =>
                 link.children ? (
                   <div key={link.key} className="flex flex-col">
@@ -191,13 +359,15 @@ const Navbar = () => {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          className="ml-3 flex flex-col"
+                          transition={{ duration: 0.2 }}
+                          className="ml-3 flex flex-col border-l border-gray-200 pl-3"
                         >
                           {link.children.map((child) => (
                             <Link
                               key={child.href}
                               href={child.href}
-                              className="hover:text-primaryBlue px-2 py-2 text-sm text-gray-600 transition-colors"
+                              className="hover:text-primaryBlue px-2 py-1.5 text-sm text-gray-600 transition-colors"
+                              onClick={closeMobileMenu}
                             >
                               {child.title}
                             </Link>
@@ -211,19 +381,23 @@ const Navbar = () => {
                     key={link.label}
                     href={link.href!}
                     className="hover:text-primaryBlue py-2 text-gray-700 transition-colors"
+                    onClick={closeMobileMenu}
                   >
                     {link.label}
                   </Link>
                 ),
               )}
 
-              {/* CTA on Mobile */}
-              <Link
-                href="/login"
-                className="bg-primaryBlue hover:bg-primaryBlue/90 flex items-center justify-center rounded-full px-4 py-2.5 font-medium text-white transition-colors"
-              >
-                Masuk <ChevronRight size={20} />
-              </Link>
+              {/* Login Button on Mobile (if not logged in) */}
+              {!isLoggedIn && (
+                <Link
+                  href="/login"
+                  className="bg-primaryBlue hover:bg-primaryBlue/90 flex items-center justify-center rounded-full px-4 py-2.5 font-medium text-white transition-colors"
+                  onClick={closeMobileMenu}
+                >
+                  Masuk <ChevronRight size={20} />
+                </Link>
+              )}
             </div>
           </motion.div>
         )}

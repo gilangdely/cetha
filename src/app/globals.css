@@ -51,6 +51,8 @@
 
     --color-TextPrimary: #111827;
     --color-TextSecondary: #595e68;
+
+    --color-Background: #f9fafb;
 }
 
 @theme inline {

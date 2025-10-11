@@ -39,6 +39,7 @@ import {
   ChevronsUpDown,
   Settings2,
   FileSearch,
+  Linkedin,
   Newspaper,
 } from "lucide-react";
 
@@ -56,6 +57,11 @@ const mainMenu = [
     title: "Perbaiki CV",
     icon: FileSearch,
     href: "/dashboard/review-cv",
+  },
+  {
+    title: "Tingkatkan LinkedIn",
+    icon: Linkedin,
+    href: "/dashboard/tingkatkan-linkedIn",
   },
   {
     title: "Artikel & Video",
