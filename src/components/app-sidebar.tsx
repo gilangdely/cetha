@@ -1,67 +1,209 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { auth } from "@/app/lib/firebase";
+import { logoutUser } from "@/app/lib/auth";
 
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-} from "@/components/ui/sidebar"
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/components/ui/sidebar";
 
-// Menu items.
-const items = [
-    {
-        title: "Home",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
-    },
-    {
-        title: "Search",
-        url: "#",
-        icon: Search,
-    },
-    {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
-]
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+
+import {
+  User,
+  LayoutDashboard,
+  Settings,
+  Info,
+  HelpCircle,
+  LogOut,
+  ChevronDown,
+  ChevronsUpDown,
+  Settings2,
+  FileSearch,
+  Newspaper,
+} from "lucide-react";
+
+import { Avatar } from "@/components/ui/avatar";
+import UserAvatar from "@/components/user-avatar";
+import LogoutAlert from "@/components/logout-alert";
+
+const mainMenu = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    href: "/dashboard",
+  },
+  {
+    title: "Perbaiki CV",
+    icon: FileSearch,
+    href: "/dashboard/review-cv",
+  },
+  {
+    title: "Artikel & Video",
+    icon: Newspaper,
+    href: "/dashboard/article-and-video",
+  },
+];
+
+const lainnyaMenu = [
+  { title: "Pengaturan", icon: Settings, href: "/settings" },
+  { title: "Bantuan", icon: HelpCircle, href: "/help" },
+  { title: "Tentang Aplikasi", icon: Info, href: "/about" },
+];
 
 export function AppSidebar() {
-    return (
-        <Sidebar>
-            <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <a href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </a>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-            </SidebarContent>
-        </Sidebar>
-    )
+  const router = useRouter();
+  const [username, setUsername] = useState("Cetha");
+  const [email, setEmail] = useState("m@example.com");
+  const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUsername(
+          user.displayName || user.email?.split("@")[0] || "Pengguna",
+        );
+        setEmail(user.email || "m@example.com");
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/");
+  };
+
+  return (
+    <>
+      <Sidebar className="border-r bg-white/90 backdrop-blur">
+        <SidebarHeader className="flex items-center justify-center border-b py-4">
+          <div className="text-primary flex items-center gap-2 text-lg font-semibold">
+            <User className="h-5 w-5" />
+            <span>MyApp</span>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Menu Utama</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {mainMenu.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        href={item.href}
+                        className="hover:bg-accent/50 flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150"
+                      >
+                        <item.icon className="text-muted-foreground h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>Lainnya</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <SidebarMenuButton className="hover:bg-accent/50 flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium">
+                        <div className="flex items-center gap-2">
+                          <Settings2 className="text-muted-foreground h-4 w-4" />
+                          <span>Pengaturan</span>
+                        </div>
+                        <ChevronDown className="h-4 w-4" />
+                      </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="min-w-[--radix-popper-anchor-width]">
+                      {lainnyaMenu.map((item) => (
+                        <DropdownMenuItem key={item.title} asChild>
+                          <Link
+                            href={item.href}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <item.icon className="h-4 w-4" />
+                            {item.title}
+                          </Link>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="hover:bg-accent/50 flex w-full items-center justify-between rounded-md px-2 py-2 text-sm transition-all duration-150 focus:outline-none">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <UserAvatar />
+                  </Avatar>
+                  <div className="flex flex-col items-start">
+                    <span className="text-sm font-medium">{username}</span>
+                    <span className="text-muted-foreground text-xs">
+                      {email}
+                    </span>
+                  </div>
+                </div>
+                <ChevronsUpDown size={16} className="text-muted-foreground" />
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent side="right" align="end" className="w-56">
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium">{username}</p>
+                  <p className="text-muted-foreground text-xs">{email}</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Akun</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setOpenDialog(true)}>
+                <LogOut className="mr-2 h-4 w-4 text-red-500" />
+                <span className="text-red-500">Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarFooter>
+      </Sidebar>
+
+      {/* === Dialog Konfirmasi Logout === */}
+      <LogoutAlert
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        handleLogout={handleLogout}
+      />
+    </>
+  );
 }

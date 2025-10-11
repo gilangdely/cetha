@@ -24,7 +24,7 @@ const Cards = [
     title: "Profil LinkedIn Lebih Standout",
     description:
       "Dapatkan masukan untuk headline, summary, dan skill agar lebih mudah ditemukan recruiter.",
-    link: "/improve-linkedIn",
+    link: "/tingkatkan-linkedIn",
   },
   {
     id: 3,

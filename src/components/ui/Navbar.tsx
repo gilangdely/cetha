@@ -19,7 +19,7 @@ const navLinks = [
         desc: "Dapatkan feedback profesional untuk CV Anda",
       },
       {
-        href: "/improve-linkedIn",
+        href: "/tingkatkan-linkedIn",
         title: "Improve Profile LinkedIn",
         desc: "Optimalisasi profil LinkedIn Anda",
       },
@@ -41,8 +41,8 @@ const navLinks = [
       },
     ],
   },
-  { label: "Harga", href: "/pricing" },
-  { label: "Tentang Kami", href: "/about-us" },
+  { label: "Harga", href: "/daftar-harga" },
+  { label: "Tentang Kami", href: "tentang-kami" },
 ];
 
 const Navbar = () => {

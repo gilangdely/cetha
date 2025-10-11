@@ -4,7 +4,7 @@ import { useState } from "react";
 import { registerUser } from "@/app/lib/auth";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import AuthCarousel from "@/components/AuthCarousel";
+import AuthCarousel from "@/components/auth-carousel";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -28,9 +28,9 @@ export default function RegisterPage() {
       router.push("/login");
     } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
-        setErrorMsg("Email telah terdaftar, gunakan email lain.")
-      }else{
-        setErrorMsg('Gagal Registrasi : '+error.message);
+        setErrorMsg("Email telah terdaftar, gunakan email lain.");
+      } else {
+        setErrorMsg("Gagal Registrasi : " + error.message);
       }
     } finally {
       setLoading(false);
@@ -115,7 +115,9 @@ export default function RegisterPage() {
                   </button>
                 </div>
 
-                {errorMsg && <p className="text-red-500 text-sm mt-2">{errorMsg}</p>}
+                {errorMsg && (
+                  <p className="mt-2 text-sm text-red-500">{errorMsg}</p>
+                )}
 
                 <div className="flex items-center gap-6">
                   <div className="h-0.5 w-full rounded-lg bg-gray-200" />

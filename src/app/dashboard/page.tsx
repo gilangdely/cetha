@@ -1,46 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { logoutUser } from "@/app/lib/auth"
-import { auth } from "@/app/lib/firebase"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "@/app/lib/auth";
+import { auth } from "@/app/lib/firebase";
 
-import LinkedAccounts from "@/components/LinkedAccounts"
-
-
-
+import LinkedAccounts from "@/components/linked-account";
 
 export default function DashboardPage() {
-    const router = useRouter()
+  const [username, setUsername] = useState<string | null>(null);
+  const router = useRouter();
 
-    const handleLogout = async () => {
-        await logoutUser()
-        router.push("/")
-    }
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/");
+  };
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUsername(user.displayName || "Pengguna");
+      } else {
+        setUsername(null);
+      }
+    });
 
-    const [username, setUsername] = useState<string | null>(null)
+    return () => unsubscribe();
+  }, []);
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-            if (user) {
-                setUsername(user.displayName || "Pengguna")
-            } else {
-                setUsername(null)
-            }
-        })
-
-        return () => unsubscribe()
-    }, [])
-
-
-    return (
-        <div className="p-6 flex flex-1 justify-center items-center">
-            <p className="text-center mr-5">{username ? `Halo, ${username}!` : "Kamu belum login"}
-            </p>
-                  <LinkedAccounts />
-
-            
-        </div>
-    )
+  return (
+    <div className="flex flex-1 items-center justify-center p-6">
+      <p className="mr-5 text-center">
+        {username ? `Halo, ${username}!` : "Kamu belum login"}
+      </p>
+      <LinkedAccounts />
+    </div>
+  );
 }

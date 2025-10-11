@@ -4,6 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+[data-radix-popper-content-wrapper] > div {
+  width: var(--radix-popper-anchor-width, auto) !important;
+  min-width: 8rem;
+}
+
 :root {
     --font-primary: "Manrope", sans-serif;
     --radius: 0.625rem;
