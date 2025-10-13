@@ -44,7 +44,7 @@ const navLinks = [
     key: "blog",
     children: [
       {
-        href: "/career-tips",
+        href: "/tips-karir",
         title: "Blog Karier",
         desc: "Artikel & insight untuk bantu perkembangan karirmu",
       },
@@ -68,7 +68,7 @@ const Navbar = () => {
   const [email, setEmail] = useState("m@example.com");
   const [openAvatarMenu, setOpenAvatarMenu] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
-  
+
   const avatarMenuRef = useRef<HTMLDivElement>(null);
   const desktopAvatarRef = useRef<HTMLDivElement>(null);
 
@@ -116,13 +116,12 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
-        isMobileMenuOpen
+      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${isMobileMenuOpen
           ? "bg-white shadow-sm"
           : isScrolled
-          ? "bg-white/80 shadow-sm backdrop-blur-md"
-          : "bg-transparent"
-      }`}
+            ? "bg-white/80 shadow-sm backdrop-blur-md"
+            : "bg-transparent"
+        }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         {/* Logo */}
