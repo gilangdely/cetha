@@ -10,6 +10,8 @@ import LinkedAccounts from "@/components/linked-account";
 export default function DashboardPage() {
   const [username, setUsername] = useState<string | null>(null);
   const router = useRouter();
+  const [loading, setLoading] = useState(true)
+
 
   const handleLogout = async () => {
     await logoutUser();
@@ -19,14 +21,17 @@ export default function DashboardPage() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setUsername(user.displayName || "Pengguna");
+        setUsername(user.displayName || user.email || "Pengguna")
       } else {
-        setUsername(null);
+        router.push("/") // redirect ke landing/login
       }
+      setLoading(false)
     });
 
     return () => unsubscribe();
   }, []);
+
+  if (loading) return null
 
   return (
     <div className="flex flex-1 items-center justify-center p-6">
