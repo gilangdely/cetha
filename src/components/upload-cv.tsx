@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingScreen from "@/components/loading";
+import LoadingScreen from "@/components/loading-screen";
 import axios from "axios";
 import Image from "next/image";
 import { useDataReviewStore } from "@/store/dataReviewStore";

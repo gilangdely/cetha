@@ -1,8 +1,12 @@
 "use client"
 
-import { ChevronRight, Book, Video, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+
+import { ChevronRight, Book, Video, ArrowRight } from "lucide-react";
+
+import illustration from '@/assets/img/illustration-tips-karir.jpg';
+
 
 export default function TipsKarirPage() {
     return (
@@ -28,13 +32,13 @@ export default function TipsKarirPage() {
                                 Dari tips bikin CV, trik LinkedIn, sampai strategi interview semua ada di blog & video kami untuk bantu kamu siap masuk dunia kerja.
                             </p>
                             <div className="flex gap-4">
-                                <div className="px-3 py-2 flex items-center gap-2 bg-primaryBlue rounded-full text-white"> <Book size={18} /> Artikel</div>
-                                <div className="px-3 py-2 flex items-center gap-2 bg-Background rounded-full text-TextSecondary"> <Video size={18} /> Video</div>
+                                <div className="px-3 py-2 flex items-center gap-2 bg-primaryBlue rounded-full text-white cursor-pointer"> <Book size={18} /> Artikel</div>
+                                <div className="px-3 py-2 flex items-center gap-2 bg-Background rounded-full text-TextSecondary cursor-pointer"> <Video size={18} /> Video</div>
                             </div>
                             <div className="flex w-full gap-2">
                                 <input
                                     type="text"
-                                    placeholder="Masukan username atau URL profil LinkedIn kamu"
+                                    placeholder="Cari artikel atau tips tips keren"
                                     className="flex-1 rounded-full border px-4 py-2"
                                 />
                                 <button className="bg-primaryBlue rounded-full px-2 py-2 font-medium text-white">
@@ -43,13 +47,13 @@ export default function TipsKarirPage() {
                             </div>
                         </div>
                         <div className="flex-1">
-                            {/* <Image
+                            <Image
                                 className="relative"
                                 height={550}
                                 draggable={false}
-                                src={""}
-                                alt=""
-                            /> */}
+                                src={illustration}
+                                alt='illustration'
+                            />
                         </div>
                     </div>
                 </div>
