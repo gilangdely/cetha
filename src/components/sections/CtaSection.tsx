@@ -21,10 +21,10 @@ const CtaSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true }}
         >
-          <h2 className="text-TextPrimary text-3xl font-semibold md:text-4xl">
+          <h2 className="text-TextPrimary text-2xl font-semibold md:text-3xl">
             Mulai Tingkatkan Kariermu
           </h2>
-          <p className="text-TextSecondary mt-6 text-base md:text-lg">
+          <p className="text-TextSecondary mt-2 text-base lg:text-lg">
             Review CV kamu atau tingkatkan profil LinkedIn-mu sekarang. Dapatkan
             insight yang membantu kamu stand out di mata recruiter!
           </p>

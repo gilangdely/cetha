@@ -40,20 +40,7 @@ const navLinks = [
     ],
   },
   {
-    label: "Blog & Tips",
-    key: "blog",
-    children: [
-      {
-        href: "/tips-karir",
-        title: "Blog Karier",
-        desc: "Artikel & insight untuk bantu perkembangan karirmu",
-      },
-      {
-        href: "/interview-guide",
-        title: "Video Tips",
-        desc: "Kumpulan tips karier dalam format video singkat & seru",
-      },
-    ],
+    label: "Blog & Tips", href:"/tips-karir"
   },
   { label: "Harga", href: "/daftar-harga" },
   { label: "Tentang Kami", href: "/tentang-kami" },
@@ -75,7 +62,9 @@ const Navbar = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        setUsername(user.displayName || user.email?.split("@")[0] || "Pengguna");
+        setUsername(
+          user.displayName || user.email?.split("@")[0] || "Pengguna",
+        );
         setEmail(user.email || "m@example.com");
         setIsLoggedIn(true);
       } else {
@@ -132,21 +121,22 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${isMobileMenuOpen
-        ? "bg-white shadow-sm"
-        : isScrolled
-          ? "bg-white/80 shadow-sm backdrop-blur-md"
-          : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
+        isMobileMenuOpen
+          ? "bg-white shadow-sm"
+          : isScrolled
+            ? "bg-white/80 shadow-sm backdrop-blur-md"
+            : "bg-transparent"
+      }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center z-10">
-          <Image alt="Cetha Logo" src={logo} height={45} />
+        <Link href="/" className="z-10 flex items-center">
+          <Image alt="Cetha Logo" src={logo} height={50} />
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 transform lg:flex">
           <ul className="flex items-center gap-10 text-gray-700">
             {navLinks.map((link) =>
               link.children ? (
@@ -158,7 +148,7 @@ const Navbar = () => {
                 >
                   <button
                     onClick={() => toggleDropdown(link.key!)}
-                    className="hover:text-primaryBlue flex items-center gap-1 transition-colors whitespace-nowrap"
+                    className="hover:text-primaryBlue flex items-center gap-1 whitespace-nowrap transition-colors"
                   >
                     {link.label}
                     {activeDropdown === link.key ? (
@@ -199,7 +189,7 @@ const Navbar = () => {
                 <li key={link.label}>
                   <Link
                     href={link.href!}
-                    className="hover:text-primaryBlue transition-colors whitespace-nowrap"
+                    className="hover:text-primaryBlue whitespace-nowrap transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -210,7 +200,10 @@ const Navbar = () => {
         </div>
 
         {/* Avatar + Auth - Desktop */}
-        <div className="hidden md:block z-10" ref={desktopAvatarRef}>
+        <div
+          className="z-10 hidden items-center lg:flex"
+          ref={desktopAvatarRef}
+        >
           {!isLoggedIn ? (
             <Link
               href="/login"
@@ -222,13 +215,13 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setOpenAvatarMenu(!openAvatarMenu)}
-                className="flex w-full items-center gap-3 rounded-lg px-2 py-2 transition hover:bg-gray-50"
+                className="flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-gray-50"
               >
                 <Avatar>
                   <UserAvatar />
                 </Avatar>
-                <div className="flex flex-col text-left">
-                  <span className="text-sm font-medium text-gray-800">
+                <div className="flex max-w-[140px] flex-col truncate text-left md:max-w-[160px] lg:max-w-none">
+                  <span className="truncate text-sm font-medium text-gray-800">
                     Hai, {username}
                   </span>
                   <span className="text-xs text-gray-500">Lihat profil</span>
@@ -243,7 +236,7 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 flex flex-col rounded-lg border border-gray-200 bg-white shadow-md w-48"
+                    className="absolute right-0 mt-2 flex w-48 flex-col rounded-lg border border-gray-200 bg-white shadow-md"
                   >
                     <Link
                       href="/dashboard"
@@ -274,7 +267,7 @@ const Navbar = () => {
 
         {/* Mobile Toggle */}
         <button
-          className="rounded-lg p-2 transition hover:bg-gray-100 md:hidden z-10"
+          className="z-10 rounded-lg p-2 transition hover:bg-gray-100 lg:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -289,7 +282,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25 }}
-            className="bg-white/95 shadow-md backdrop-blur-md md:hidden"
+            className="bg-white/95 shadow-md backdrop-blur-md lg:hidden"
           >
             <div className="flex flex-col space-y-4 p-4">
               {/* Avatar & Username di atas - Mobile */}
@@ -325,25 +318,25 @@ const Navbar = () => {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="mt-3 flex flex-col space-y-1 border-t border-gray-100 pt-3 overflow-hidden"
+                        className="mt-3 flex flex-col space-y-1 overflow-hidden border-t border-gray-100 pt-3"
                       >
                         <Link
                           href="/dashboard"
-                          className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-gray-700 hover:bg-gray-50"
                           onClick={closeMobileMenu}
                         >
                           <User size={16} /> Dashboard
                         </Link>
                         <Link
                           href="/settings"
-                          className="flex items-center gap-2 px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
+                          className="flex items-center gap-2 rounded-md px-3 py-2 text-gray-700 hover:bg-gray-50"
                           onClick={closeMobileMenu}
                         >
                           <Settings size={16} /> Pengaturan
                         </Link>
                         <button
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-2 px-3 py-2 text-left text-gray-700 hover:bg-gray-50 rounded-md"
+                          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-gray-700 hover:bg-gray-50"
                         >
                           <LogOut size={16} /> Keluar
                         </button>

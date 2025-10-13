@@ -13,7 +13,7 @@ export default function HomePage() {
       <AdventagesSection />
       <HowItWorksSection />
       <CvUpgradeSection />
-      {/* <ImproveLinkedinSection /> */}
+      <ImproveLinkedinSection />
       <CtaSection />
       {/* <JobMatchSection /> */}
     </main>

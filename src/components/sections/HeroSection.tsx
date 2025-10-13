@@ -13,9 +13,9 @@ const HeroSection = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="mx-auto flex min-h-screen w-full max-w-7xl items-center"
+      className="mx-auto flex lg:min-h-screen w-full max-w-7xl items-center"
     >
-      <div className="flex w-full flex-col-reverse items-center gap-2 px-6 pt-16 pb-12 md:flex-row lg:gap-10 lg:px-0">
+      <div className="flex w-full flex-col-reverse items-center gap-2 px-6 pt-16 md:pt-24 pb-12 md:flex-row lg:gap-10 lg:px-0 lg:pt-0">
         {/* Left */}
         <motion.div
           className="flex-1"
@@ -38,7 +38,7 @@ const HeroSection = () => {
             </p>
             <Link
               href={"/login"}
-              className="bg-primaryBlue mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4.5 py-3 font-medium text-white md:w-fit lg:mt-5"
+              className="bg-primaryBlue mt-2 flex w-full items-center justify-center gap-2 rounded-full px-4.5 py-3 font-medium text-white md:w-fit lg:mt-5"
             >
               <p>Mulai Sekarang</p> <Send height={20} />
             </Link>

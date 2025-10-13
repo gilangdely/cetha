@@ -212,7 +212,7 @@ const UploadCv = () => {
 
       {/* Button Upload */}
       <div className="mx-auto w-full pt-4 pb-12">
-        <div className="flex justify-start">
+        <div className="flex justify-end lg:justify-start">
           <button
             onClick={handleUpload}
             disabled={uploading}
