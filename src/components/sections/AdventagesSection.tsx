@@ -51,7 +51,7 @@ const AdventagesSection = () => {
           <p className="text-primaryBlue lg:font-medium">Kenapa Cetha</p>
         </div>
         <div className="mt-4 max-w-3xl flex-col text-center">
-          <h2 className="text-TextPrimary text-2xl font-semibold md:text-4xl lg:text-3xl">
+          <h2 className="text-TextPrimary text-2xl font-semibold md:text-3xl">
             Cara Pintar Untuk Mencapai Karier <br className="hidden md:block" />{" "}
             Impianmu
           </h2>
@@ -72,7 +72,7 @@ const AdventagesSection = () => {
             transition={{
               duration: 0.6,
               ease: "easeOut",
-              delay: idx * 0.2, // kasih efek stagger manual
+              delay: idx * 0.2,
             }}
             viewport={{ once: true, amount: 0.2 }}
             className="flex h-full flex-col justify-between rounded-xl border border-gray-300 bg-white p-6 text-start shadow-sm transition-shadow hover:shadow-md"

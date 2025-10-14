@@ -4,6 +4,8 @@ import { useState } from "react";
 import { registerUser } from "@/app/lib/auth";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { toast } from "sonner";
+
 import AuthCarousel from "@/components/auth-carousel";
 
 export default function RegisterPage() {
@@ -17,20 +19,24 @@ export default function RegisterPage() {
 
   const handleRegister = async () => {
     if (!username || !email || !password || !confirmPassword) {
-      alert("semua field harus diisi!");
+      toast("Semua field harus diisi");
       return;
     }
 
     setLoading(true);
     try {
       await registerUser(username, email, password, confirmPassword);
-      alert("Registrasi berhasil!");
+      toast("Registrasi berhasil");
       router.push("/login");
     } catch (error: any) {
+      console.error("Error registrasi:", error);
+
       if (error.code === "auth/email-already-in-use") {
-        setErrorMsg("Email telah terdaftar, gunakan email lain.");
+        toast("Email telah terdaftar, gunakan email lain");
+        setErrorMsg("Email telah terdaftar, gunakan email lain");
       } else {
-        setErrorMsg("Gagal Registrasi : " + error.message);
+        toast("Gagal registrasi: " + error.message);
+        setErrorMsg("Gagal registrasi: " + error.message);
       }
     } finally {
       setLoading(false);

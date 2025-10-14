@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser, loginWithGoogle } from "@/app/lib/auth";
-import AuthCarousel from "@/components/auth-carousel";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/lib/firebase";
+import { toast } from "sonner";
+
+import Link from "next/link";
+import AuthCarousel from "@/components/auth-carousel";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,22 +20,30 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      alert("Email dan Password wajib diisi");
+      toast("Email dan Password wajib diisi");
       return;
     }
+
     setLoading(true);
     try {
       await loginUser(email, password);
-      alert("Login berhasil!");
+      toast("Login berhasil");
       router.push("/dashboard");
     } catch (error: any) {
-      console.log("Error login : " + error);
-      if (error.code === "auth/wrong-password") {
-        setErrorMsg("Password salah. Coba lagi.");
-      } else if (error.code === "auth/user-not-found") {
-        setErrorMsg("Email belum terdaftar.");
-      } else {
-        setErrorMsg("Email atau password yang kamu masukkan tidak cocok.");
+      console.error("Error login:", error);
+
+      switch (error.code) {
+        case "auth/wrong-password":
+          toast("Password salah");
+          setErrorMsg("Password salah");
+          break;
+        case "auth/user-not-found":
+          toast("Email belum terdaftar");
+          setErrorMsg("Email belum terdaftar");
+          break;
+        default:
+          toast("Email atau password tidak cocok");
+          setErrorMsg("Email atau password tidak cocok");
       }
     } finally {
       setLoading(false);
@@ -43,18 +53,19 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       const user = await loginWithGoogle();
-      alert(`Selamat datang, ${user.displayName}!`);
+      toast(`Selamat datang, ${user.displayName}`);
       router.push("/dashboard");
     } catch (error: any) {
-      console.error("Error saat login dengan Google:", error);
-      alert(error.message);
+      console.error("Error saat login Google:", error);
+      toast(`Gagal login: ${error.message}`);
     }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.push("/dashboard"); // ✅ Redirect kalau sudah login
+        toast("Kamu sudah login, diarahkan ke dashboard");
+        router.push("/dashboard");
       }
     });
     return () => unsubscribe();
