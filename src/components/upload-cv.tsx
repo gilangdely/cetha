@@ -109,15 +109,15 @@ const UploadCv = () => {
       setUploading(true);
       setProgress(0);
 
-      const res = await axios.post("/api/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        onUploadProgress: (event) => {
-          const percent = event.total
-            ? Math.round((event.loaded * 100) / event.total)
-            : 0;
-          setProgress(percent);
-        },
-      });
+        const res = await axios.post("/api/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (event) => {
+            const percent = event.total
+              ? Math.round((event.loaded * 100) / event.total)
+              : 0;
+            setProgress(percent);
+          },
+        });
 
       toast.success("File berhasil diunggah!");
       console.log("Respon server:", res.data);
@@ -245,6 +245,15 @@ const UploadCv = () => {
           </div>
         )}
       </div>
+      <div className="mt-2 text-sm text-gray-500 text-center">
+        {!isLoggedIn && (
+          <span>
+            Sisa upload tanpa login: {Math.max(0, 5 - uploadCount)} dari 5 kali
+          </span>
+        )}
+      </div>
+
+
       <div className="mt-4">
         <p className="text-TextSecondary font-medium">
           File yang dapat terbaca: DOC, DOCX, PDF
