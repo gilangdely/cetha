@@ -75,11 +75,10 @@ const Footer = () => {
             <ul className="space-y-2">
               {[
                 { href: "/review-cv", label: "Review CV" },
-                { href: "/improve-linkedIn", label: "Review LinkedIn" },
-                { href: "/career-tips", label: "Blog Karier" },
-                { href: "/interview-guide", label: "Video Tips" },
-                { href: "/pricing", label: "Harga" },
-                { href: "/about", label: "Tentang Kami" },
+                { href: "/tingkatkan-linkedIn", label: "Review LinkedIn" },
+                { href: "/tips-karir", label: "Blog Karier" },
+                { href: "/daftar-harga", label: "Harga" },
+                { href: "/tentang-kami", label: "Tentang Kami" },
               ].map((item, i) => (
                 <motion.li
                   key={i}

@@ -1,73 +1,53 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, Clock } from "lucide-react";
-import { Switch } from "@/components/ui/switch";
+import { CheckCircle } from "lucide-react";
 
-const PricingList = [
+const QuotaList = [
   {
-    tier: "Gratis",
-    price: { month: "0 IDR", year: "0 IDR" },
-    per: { month: "/ Bulan", year: "/ Tahun" },
-    tagline: "Cocok bagi pengguna baru yang ingin mencoba fitur dasar Cetha.",
+    tier: "Pemula",
+    price: "20.000 IDR",
+    quota: "10 Kuota",
+    tagline: "Coba fitur review dengan harga terjangkau.",
     features: [
-      { name: "Review CV & LinkedIn dasar", available: true },
-      { name: "Analisis kata kunci pekerjaan", available: true },
-      { name: "Saran perbaikan umum", available: true },
-      { name: "Rekomendasi pekerjaan terbatas", available: true },
-      { name: "Tampilan responsif (mobile & desktop)", available: true },
-      { name: "Tanpa riwayat review tersimpan", available: false },
-      { name: "Tanpa filter pekerjaan lanjutan", available: false },
-      { name: "Tanpa pembaruan mingguan pekerjaan", available: false },
+      "Analisis CV & LinkedIn dasar",
+      "Rekomendasi pekerjaan terbatas",
+      "Saran perbaikan umum",
     ],
-    buttonText: "Mulai Gratis",
+    buttonText: "Beli 10 Kuota",
     featured: false,
   },
   {
-    tier: "Pro",
-    price: { month: "75.000 IDR", year: "749.000 IDR" },
-    per: { month: "/ Bulan", year: "/ Tahun" },
-    tagline:
-      "Untuk pencari kerja aktif yang ingin hasil review lebih mendalam.",
+    tier: "Profesional",
+    price: "50.000 IDR",
+    quota: "30 Kuota",
+    tagline: "Untuk pencari kerja aktif yang ingin hasil lebih detail.",
     features: [
-      { name: "Semua fitur paket Gratis", available: true },
-      { name: "Review CV & LinkedIn mendetail", available: true },
-      { name: "Saran personalisasi konten", available: true },
-      { name: "Simpan riwayat hasil review", available: true },
-      { name: "Rekomendasi pekerjaan real-time", available: true },
-      { name: "Mode hemat data", available: true },
-      { name: "Analisis AI lanjutan", available: false },
-      { name: "Notifikasi lowongan baru", available: false },
+      "Semua fitur paket Pemula",
+      "Analisis kata kunci AI",
+      "Simpan riwayat hasil review",
+      "Rekomendasi pekerjaan real-time",
     ],
-    buttonText: "Upgrade ke Pro",
+    buttonText: "Beli 30 Kuota",
     featured: true,
   },
   {
     tier: "Eksklusif",
-    price: { month: "149.000 IDR", year: "1.499.000 IDR" },
-    per: { month: "/ Bulan", year: "/ Tahun" },
-    tagline: "Akses premium untuk rekomendasi kerja paling akurat dan cepat.",
+    price: "100.000 IDR",
+    quota: "100 Kuota",
+    tagline: "Akses penuh dengan hasil tercepat dan terakurat.",
     features: [
-      { name: "Semua fitur paket Pro", available: true },
-      { name: "Analisis AI tingkat lanjut", available: true },
-      {
-        name: "Kesesuaian pekerjaan berdasarkan minat & pengalaman",
-        available: true,
-      },
-      { name: "Notifikasi lowongan baru real-time", available: true },
-      { name: "Prioritas dukungan pengguna", available: true },
-      { name: "Akses offline hasil review", available: true },
-      { name: "Akses fitur eksperimental", available: true },
+      "Semua fitur paket Profesional",
+      "Analisis AI lanjutan",
+      "Kesesuaian pekerjaan berdasarkan minat & pengalaman",
+      "Prioritas dukungan pengguna",
     ],
-    buttonText: "Pilih Paket Eksklusif",
+    buttonText: "Beli 100 Kuota",
     featured: false,
   },
 ];
 
-export default function Pricing() {
-  const [isYearly, setIsYearly] = useState(false);
-
+export default function PricingByQuota() {
   return (
     <motion.section
       initial={{ opacity: 0, y: 20 }}
@@ -75,6 +55,7 @@ export default function Pricing() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="container mx-auto max-w-7xl px-4 py-16 pt-28"
     >
+      {/* Header Section */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -82,29 +63,21 @@ export default function Pricing() {
         className="mb-8 text-center"
       >
         <div className="border-primaryBlue mx-auto w-fit rounded-full border-2 px-2 py-1 lg:px-3 lg:py-1.5">
-          <p className="text-primaryBlue lg:font-medium">Paket Langganan</p>
+          <p className="text-primaryBlue lg:font-medium">Paket Kuota</p>
         </div>
         <div className="mt-4 mx-auto max-w-3xl flex-col text-center">
           <h2 className="text-TextPrimary text-2xl font-semibold md:text-4xl lg:text-3xl">
-            Harga yang Sederhana & Transparan
+            Bayar Sekali, Gunakan Sesuai Kebutuhan
           </h2>
           <p className="text-TextSecondary mt-2 text-base lg:text-lg">
-            Tingkatkan peluang karier Anda dengan fitur Cetha yang didukung AI.
-            Mulai gratis, upgrade kapan saja.
+            Dapatkan kuota review untuk menganalisis CV dan mendapatkan rekomendasi kerja sesuai kebutuhanmu.
           </p>
         </div>
       </motion.div>
-      <div className="mb-10 flex items-center justify-center gap-4">
-        <span className="text-base font-semibold">Bulanan</span>
-        <Switch
-          checked={isYearly}
-          onCheckedChange={setIsYearly}
-          aria-label="Toggle harga"
-        />
-        <span className="text-base font-semibold">Tahunan</span>
-      </div>
+
+      {/* Quota Cards */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {PricingList.map((plan, i) => (
+        {QuotaList.map((plan, i) => (
           <motion.div
             key={plan.tier}
             initial={{ opacity: 0, y: 30 }}
@@ -131,56 +104,30 @@ export default function Pricing() {
               <h3 className="mb-1 text-xl font-bold">{plan.tier}</h3>
               <p className="text-sm opacity-90">{plan.tagline}</p>
             </div>
-            <div className="mb-6">
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-extrabold">
-                  {isYearly ? plan.price.year : plan.price.month}
-                </span>
-                <span className="text-sm opacity-80">
-                  {isYearly ? plan.per.year : plan.per.month}
-                </span>
-              </div>
 
-              {isYearly && plan.tier !== "Gratis" && (
-                <span className="mt-2 inline-block rounded-md bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
-                  Hemat {plan.tier === "Pro" ? "50.000 IDR" : "100.000 IDR"}
-                  /tahun
-                </span>
-              )}
+            <div className="mb-6">
+              <div className="flex items-baseline gap-2">
+                <span className="text-3xl font-extrabold">{plan.price}</span>
+                <span className="text-sm opacity-80">• {plan.quota}</span>
+              </div>
             </div>
+
             <ul className="mb-8 flex flex-1 flex-col gap-2 text-sm">
               {plan.features.map((f) => (
-                <li
-                  key={f.name}
-                  className={`flex items-center gap-2 ${
-                    plan.featured
-                      ? f.available
-                        ? "text-white"
-                        : "text-blue-100/70"
-                      : f.available
-                        ? "text-gray-700"
-                        : "text-gray-400"
-                  }`}
-                >
-                  {f.available ? (
-                    <CheckCircle
-                      className={
-                        plan.featured ? "text-white" : "text-[#2563eb]"
-                      }
-                      size={15}
-                    />
-                  ) : (
-                    <Clock
-                      className={
-                        plan.featured ? "text-blue-100/70" : "text-gray-300"
-                      }
-                      size={15}
-                    />
-                  )}
-                  <span>{f.name}</span>
+                <li key={f} className="flex items-center gap-2">
+                  <CheckCircle
+                    className={plan.featured ? "text-white" : "text-[#2563eb]"}
+                    size={15}
+                  />
+                  <span
+                    className={plan.featured ? "text-white" : "text-gray-700"}
+                  >
+                    {f}
+                  </span>
                 </li>
               ))}
             </ul>
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

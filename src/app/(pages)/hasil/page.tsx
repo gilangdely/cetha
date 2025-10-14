@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 import cardImg from "@/assets/img/article2.jpg";
+import Link from "next/link";
 
 export default function ResultPage() {
   return (
@@ -26,13 +27,16 @@ export default function ResultPage() {
               className="object-cover"
             />
           </div>
-          <div className="p-2">
-            <h3 className="mb-3 text-sm font-semibold text-gray-800">
+          <div className="p-4">
+            <h3 className="text-TextPrimary mb-3 text-sm font-semibold">
               Coba nilai CV-mu berdasarkan pekerjaan impian mu
             </h3>
-            <button className="mt-2 w-full rounded-lg bg-primaryBlue px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+            <Link
+              href={"/rekomendasi-pekerjaan"}
+              className="bg-primaryBlue block w-full rounded-lg px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
               Coba sekarang
-            </button>
+            </Link>
           </div>
         </div>
       </motion.aside>
@@ -93,7 +97,7 @@ export default function ResultPage() {
                 <div className="overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-sm">
                   <div className="p-6 sm:p-8">
                     <div className="mb-4 flex items-center gap-3">
-                      <div className="flex p-2 items-center justify-center rounded-full bg-primaryBlue">
+                      <div className="bg-primaryBlue flex items-center justify-center rounded-full p-2">
                         <svg
                           width="24"
                           height="24"
@@ -109,7 +113,7 @@ export default function ResultPage() {
                           />
                         </svg>
                       </div>
-                      <h3 className="text-lg font-semibold text-gray-800 sm:text-2xl">
+                      <h3 className="text-TextPrimary text-lg font-semibold sm:text-2xl">
                         Coba Rekomendasi Pekerjaan
                       </h3>
                     </div>
@@ -117,7 +121,7 @@ export default function ResultPage() {
                       Temukan pekerjaan yang sesuai dengan skill dan pengalaman
                       yang kamu miliki berdasarkan analisis CV kamu.
                     </p>
-                    <button className="w-full rounded-xl bg-primaryBlue px-6 py-3.5 font-medium text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg sm:text-lg">
+                    <button className="bg-primaryBlue w-full rounded-xl px-6 py-3.5 font-medium text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg sm:text-lg">
                       Lihat Rekomendasi Pekerjaan
                     </button>
                   </div>

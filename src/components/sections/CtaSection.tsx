@@ -39,7 +39,7 @@ const CtaSection = () => {
           viewport={{ once: true }}
         >
           <Link
-            href={"/improve-linkedIn"}
+            href={"/tingkatkan-linkedIn"}
             className="border-primaryBlue text-primaryBlue flex w-full items-center justify-center rounded-full border bg-white px-5 py-3 sm:w-auto"
           >
             Perbaiki LinkedIn

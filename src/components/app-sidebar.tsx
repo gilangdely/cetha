@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image"
+import Image from "next/image";
 import { auth } from "@/app/lib/firebase";
 import { logoutUser } from "@/app/lib/auth";
 
@@ -30,7 +30,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import {
-  User,
   LayoutDashboard,
   Settings,
   Info,
@@ -44,7 +43,7 @@ import {
   Newspaper,
 } from "lucide-react";
 
-import logo from "@/assets/icons/cetha-logo.svg"
+import logo from "@/assets/icons/cetha-logo.svg";
 import cardImg from "@/assets/img/article2.jpg";
 
 import { Avatar } from "@/components/ui/avatar";
@@ -107,7 +106,10 @@ export function AppSidebar() {
     <>
       <Sidebar className="border-r bg-white/90 backdrop-blur">
         <SidebarHeader className="flex items-center justify-start pt-4">
-          <Link href={"/"} className="text-TextPrimary flex items-center gap-2 text-lg font-semibold h-12">
+          <Link
+            href={"/"}
+            className="text-TextPrimary flex h-12 items-center gap-2 text-lg font-semibold"
+          >
             <Image alt="logo cetha" src={logo} height={60} />
           </Link>
         </SidebarHeader>
@@ -143,9 +145,14 @@ export function AppSidebar() {
                       <h3 className="mb-3 text-xs font-semibold text-gray-800">
                         Coba nilai CV-mu berdasarkan pekerjaan impian mu
                       </h3>
-                      <button className="w-full rounded-lg bg-primaryBlue px-2 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
-                        Coba sekarang
-                      </button>
+                      <div>
+                        <Link
+                          href="/dashboard/rekomendasi-pekerjaan"
+                          className="bg-primaryBlue block w-full rounded-lg px-3 py-1.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-700"
+                        >
+                          Coba sekarang
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

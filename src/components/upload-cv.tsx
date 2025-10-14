@@ -14,8 +14,7 @@ import { Trash2, ChevronRight } from "lucide-react";
 import logo from "@/assets/icons/upload-docs.svg";
 import office from "@/assets/icons/office-docsx.svg";
 
-import { auth } from "@/app/lib/firebase"
-
+import { auth } from "@/app/lib/firebase";
 
 const UploadCv = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -26,32 +25,32 @@ const UploadCv = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [ip, setIp] = useState("")
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [uploadCount, setUploadCount] = useState(0)
+  const [ip, setIp] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [uploadCount, setUploadCount] = useState(0);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsLoggedIn(!!user)
-    })
+      setIsLoggedIn(!!user);
+    });
 
     fetch("/api/ip")
       .then((res) => res.json())
       .then((data) => {
-        const ipAddr = data.ip
-        setIp(ipAddr)
+        const ipAddr = data.ip;
+        setIp(ipAddr);
 
-        const count = localStorage.getItem(`upload-count-${ipAddr}`)
-        const parsedCount = Number(count) || 0
-        setUploadCount(parsedCount)
+        const count = localStorage.getItem(`upload-count-${ipAddr}`);
+        const parsedCount = Number(count) || 0;
+        setUploadCount(parsedCount);
 
         if (!auth.currentUser && parsedCount >= 5) {
-          toast.warning("Kamu sudah mencapai batas 5x upload tanpa login.")
+          toast.warning("Kamu sudah mencapai batas 5x upload tanpa login.");
         }
-      })
+      });
 
-    return () => unsubscribe()
-  }, [])
+    return () => unsubscribe();
+  }, []);
 
   const setReviewData = useDataReviewStore((state) => state.setReviewData);
   // Helper: Buat preview jika file PDF
@@ -89,10 +88,9 @@ const UploadCv = () => {
     event.preventDefault();
   };
 
-
   if (!isLoggedIn && uploadCount > 2) {
-    toast.error("Kamu sudah mencapai batas 5x upload tanpa login.")
-    return
+    toast.error("Kamu sudah mencapai batas 5x upload tanpa login.");
+    return;
   }
 
   // Upload file ke backend
@@ -109,15 +107,15 @@ const UploadCv = () => {
       setUploading(true);
       setProgress(0);
 
-        const res = await axios.post("/api/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-          onUploadProgress: (event) => {
-            const percent = event.total
-              ? Math.round((event.loaded * 100) / event.total)
-              : 0;
-            setProgress(percent);
-          },
-        });
+      const res = await axios.post("/api/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        onUploadProgress: (event) => {
+          const percent = event.total
+            ? Math.round((event.loaded * 100) / event.total)
+            : 0;
+          setProgress(percent);
+        },
+      });
 
       toast.success("File berhasil diunggah!");
       console.log("Respon server:", res.data);
@@ -129,9 +127,9 @@ const UploadCv = () => {
       });
 
       if (!isLoggedIn) {
-        const newCount = uploadCount + 1
-        setUploadCount(newCount)
-        localStorage.setItem(`upload-count-${ip}`, String(newCount))
+        const newCount = uploadCount + 1;
+        setUploadCount(newCount);
+        localStorage.setItem(`upload-count-${ip}`, String(newCount));
       }
 
       const targetRoute = pathname.startsWith("/dashboard")
@@ -245,14 +243,13 @@ const UploadCv = () => {
           </div>
         )}
       </div>
-      <div className="mt-2 text-sm text-gray-500 text-center">
+      <div className="mt-2 text-center text-sm text-gray-500">
         {!isLoggedIn && (
           <span>
             Sisa upload tanpa login: {Math.max(0, 5 - uploadCount)} dari 5 kali
           </span>
         )}
       </div>
-
 
       <div className="mt-4">
         <p className="text-TextSecondary font-medium">
@@ -273,7 +270,7 @@ const UploadCv = () => {
           </button>
         </div>
       </div>
-      {uploading && <LoadingScreen progress={progress} />}
+      {uploading && <LoadingScreen progress={progress} type="cv" />}
     </div>
   );
 };

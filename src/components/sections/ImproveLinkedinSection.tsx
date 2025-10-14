@@ -66,7 +66,7 @@ const ImproveLinkedinSection = () => {
             viewport={{ once: true }}
           >
             <Link
-              href={"/improve-linkedIn"}
+              href={"/tingkatkan-linkedIn"}
               className="group hover:border-primaryBlue mt-8 inline-flex w-fit items-center gap-2 border-b-2 border-transparent font-medium"
             >
               <MoveLeft size={20} className="text-primaryBlue" />

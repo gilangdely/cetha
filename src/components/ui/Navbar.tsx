@@ -30,17 +30,23 @@ const navLinks = [
       {
         href: "/review-cv",
         title: "Review CV Instan",
-        desc: "Dapatkan feedback profesional untuk CV Anda",
+        desc: "Dapatkan feedback profesional untuk CV kamu",
       },
       {
         href: "/tingkatkan-linkedIn",
         title: "Improve Profile LinkedIn",
-        desc: "Optimalisasi profil LinkedIn Anda",
+        desc: "Optimalisasi profil LinkedIn kamu",
+      },
+      {
+        href: "/rekomendasi-pekerjaan",
+        title: "Job Match",
+        desc: "Rekomendasi pekerjaan terbaik sesuai CV kamu",
       },
     ],
   },
   {
-    label: "Blog & Tips", href:"/tips-karir"
+    label: "Blog & Tips",
+    href: "/tips-karir",
   },
   { label: "Harga", href: "/daftar-harga" },
   { label: "Tentang Kami", href: "/tentang-kami" },
