@@ -21,7 +21,7 @@ export default function ReviewCVPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="w-full flex-1"
+              className="w-full flex-1 lg:mt-24"
             >
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
@@ -49,7 +49,7 @@ export default function ReviewCVPage() {
                 CV Lebih Baik,{" "}
                 <span className="text-accentOrange">Peluang Lebih Besar</span>
               </motion.h2>
-              
+
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -59,7 +59,7 @@ export default function ReviewCVPage() {
                 Dapatkan feedback otomatis dari AI agar CV kamu makin standout
                 di mata recruiter.
               </motion.p>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}

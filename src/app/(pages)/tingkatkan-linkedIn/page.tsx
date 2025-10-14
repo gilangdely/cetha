@@ -53,7 +53,7 @@ export default function ImproveLinkedInPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-                className="text-TextPrimary text-2xl font-semibold md:text-3xl lg:text-4xl"
+                className="text-TextPrimary text-2xl font-semibold text-center lg:text-start md:text-3xl lg:text-4xl"
               >
                 <motion.span
                   initial={{ opacity: 0, x: -10 }}
@@ -82,7 +82,7 @@ export default function ImproveLinkedInPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-                className="text-TextSecondary mt-3 text-lg"
+                className="text-TextSecondary mt-3 text-lg text-center lg:text-start"
               >
                 Masukkan URL LinkedIn kamu, biarkan AI menganalisis headline,
                 summary, dan skill. Dapatkan saran kata kunci dan tips supaya
@@ -140,7 +140,7 @@ export default function ImproveLinkedInPage() {
             <div className="border-primaryBlue rounded-full border-2 px-3 py-1.5">
               <p className="text-primaryBlue font-medium">Cara kerja</p>
             </div>
-            
+
             <div className="mt-2 max-w-3xl flex-col text-center">
               <h2 className="text-TextPrimary text-3xl font-semibold md:text-4xl">
                 Cara Pintar untuk Wujudkan Karier{" "}

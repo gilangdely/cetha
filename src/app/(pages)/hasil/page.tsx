@@ -80,7 +80,7 @@ export default function ResultPage() {
               </div>
 
               {/* Good & Need Improvement Sections */}
-              <div className="mt-8 space-y-8 sm:mt-12 sm:space-y-12">
+              <div className="my-8 space-y-8 sm:mt-12 sm:space-y-12">
                 <GoodThingMd />
                 <NeedImprovementMd />
               </div>

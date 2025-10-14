@@ -1,6 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import { InfiniteMovingJobs } from "../infinite-moving-jobs";
+import { OptimalizeLinkedIn } from "../optimalize-linkedIn";
+import { AiBeam } from "../ai-beam";
+import { CardsLoginStack } from "../cards-login-stack";
 import { useState } from "react";
 import { CircleCheck } from "lucide-react";
 import { motion } from "framer-motion";
@@ -57,9 +60,29 @@ const HowWorks = [
   },
 ];
 
+const content = [
+  {
+    id: 1,
+    content: CardsLoginStack,
+  },
+  {
+    id: 2,
+    content: AiBeam,
+  },
+  {
+    id: 3,
+    content: OptimalizeLinkedIn,
+  },
+  {
+    id: 4,
+    content: InfiniteMovingJobs
+  }
+]
+
 const HowItWorksSection = () => {
   const [activeStep, setActiveStep] = useState(1);
   const activeData = HowWorks.find((step) => step.id === activeStep);
+  const activeContent = content.find((item) => item.id === activeStep);
 
   return (
     <motion.section
@@ -95,11 +118,24 @@ const HowItWorksSection = () => {
         className="mt-10 flex flex-col gap-6 md:flex-row"
       >
         <div className="flex h-auto w-full flex-col rounded-lg border border-gray-200 bg-white p-6 shadow-sm md:h-96 md:flex-row">
-          <div className="flex-1 flex items-center justify-center">
-            {/* <Image src={""} alt=""></Image> */}
+          {/* Kiri (konten dinamis) */}
+          <div className="w-full md:w-1/2 flex items-center justify-center">
+            {activeContent?.content ? (
+              typeof activeContent.content === "function" ? (
+                <activeContent.content />
+              ) : (
+                activeContent.content
+              )
+            ) : (
+              <p className="text-gray-400 italic">
+                Tidak ada konten khusus untuk langkah ini.
+              </p>
+            )}
           </div>
+
+          {/* Kanan (teks) */}
           {activeData ? (
-            <div className="flex-1 mt-4 md:mt-0 md:pl-6">
+            <div className="w-full md:w-1/2 mt-4 md:mt-0 md:pl-6 flex flex-col justify-center">
               <h3 className="text-TextPrimary text-2xl font-semibold md:text-3xl">
                 0{activeData.id}
               </h3>
@@ -144,19 +180,17 @@ const HowItWorksSection = () => {
           <button
             key={step.id}
             onClick={() => setActiveStep(step.id)}
-            className={`flex flex-col border-t-4 p-4 text-start transition-all ${
-              activeStep === step.id
-                ? "border-primaryBlue bg-blue-50/40"
-                : "hover:border-primaryBlue border-gray-200 bg-white"
-            }`}
+            className={`flex flex-col border-t-4 p-4 text-start transition-all ${activeStep === step.id
+              ? "border-primaryBlue bg-blue-50/40"
+              : "hover:border-primaryBlue border-gray-200 bg-white"
+              }`}
           >
             <h4 className="text-TextPrimary text-lg font-semibold">
               0{step.id}
             </h4>
             <p
-              className={`mt-1 text-sm md:text-base font-semibold ${
-                activeStep === step.id ? "text-primaryBlue" : "text-TextPrimary"
-              }`}
+              className={`mt-1 text-sm md:text-base font-semibold ${activeStep === step.id ? "text-primaryBlue" : "text-TextPrimary"
+                }`}
             >
               {step.title}
             </p>
