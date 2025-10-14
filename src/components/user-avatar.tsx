@@ -6,7 +6,7 @@ import Image from "next/image"
 import { AvatarImage } from "@/components/ui/avatar" // pastikan path ini sesuai struktur proyekmu
 import clsx from "clsx"
 
-export default function UserAvatar({className = ""}) {
+export default function UserAvatar({ className = "" }) {
   const [photoURL, setPhotoURL] = useState<string | null>(null)
   const [initials, setInitials] = useState<string | null>(null)
 
@@ -36,7 +36,7 @@ export default function UserAvatar({className = ""}) {
           alt="Avatar"
           width={1024}
           height={1024}
-          className={clsx(`rounded-full object-cover`,className)}
+          className={clsx(`rounded-full object-cover`, className)}
           unoptimized
         />
       ) : initials ? (

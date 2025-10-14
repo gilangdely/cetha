@@ -54,7 +54,7 @@ export default function ResultPage() {
               {/* Info Box */}
               <div className="mt-6 flex items-center justify-center sm:mt-8">
                 <div className="border-primaryBlue w-full max-w-2xl rounded-full border-2">
-                  <div className="flex items-center gap-3 px-4 py-1.5 sm:justify-between sm:gap-4 sm:py-2 md:gap-6 md:px-6 lg:gap-10">
+                  <div className="flex items-center gap-3 px-2 py-1.5 sm:justify-between sm:gap-4 sm:py-2 md:gap-6 md:px-6 lg:gap-10">
                     <p className="text-center text-xs sm:text-left sm:text-sm md:text-base lg:text-lg">
                       Kami melihat beberapa potensi yang kamu miliki
                     </p>

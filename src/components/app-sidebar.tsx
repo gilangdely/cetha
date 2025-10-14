@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image"
 import { auth } from "@/app/lib/firebase";
 import { logoutUser } from "@/app/lib/auth";
 
@@ -42,6 +43,9 @@ import {
   Linkedin,
   Newspaper,
 } from "lucide-react";
+
+import logo from "@/assets/icons/cetha-logo.svg"
+import cardImg from "@/assets/img/article2.jpg";
 
 import { Avatar } from "@/components/ui/avatar";
 import UserAvatar from "@/components/user-avatar";
@@ -102,11 +106,10 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar className="border-r bg-white/90 backdrop-blur">
-        <SidebarHeader className="flex items-center justify-center border-b py-4">
-          <div className="text-primary flex items-center gap-2 text-lg font-semibold">
-            <User className="h-5 w-5" />
-            <span>MyApp</span>
-          </div>
+        <SidebarHeader className="flex items-center justify-start pt-4">
+          <Link href={"/"} className="text-TextPrimary flex items-center gap-2 text-lg font-semibold h-12">
+            <Image alt="logo cetha" src={logo} height={60} />
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
@@ -126,6 +129,26 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
+                <div className="p-2.5">
+                  <div className="overflow-hidden rounded-md border border-gray-200 bg-white shadow-xs">
+                    <div className="relative h-20 w-full bg-gradient-to-br from-blue-50 to-blue-100">
+                      <Image
+                        src={cardImg}
+                        alt="CV Review"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="p-2">
+                      <h3 className="mb-3 text-xs font-semibold text-gray-800">
+                        Coba nilai CV-mu berdasarkan pekerjaan impian mu
+                      </h3>
+                      <button className="w-full rounded-lg bg-primaryBlue px-2 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-700">
+                        Coba sekarang
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
