@@ -5,7 +5,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useDataReviewStore } from "@/store/dataReviewStore";
 import { useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
@@ -13,6 +13,9 @@ import { Trash2, ChevronRight } from "lucide-react";
 
 import logo from "@/assets/icons/upload-docs.svg";
 import office from "@/assets/icons/office-docsx.svg";
+
+import { auth } from "@/app/lib/firebase"
+
 
 const UploadCv = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -22,6 +25,33 @@ const UploadCv = () => {
   const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const pathname = usePathname();
+
+  const [ip, setIp] = useState("")
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [uploadCount, setUploadCount] = useState(0)
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsLoggedIn(!!user)
+    })
+
+    fetch("/api/ip")
+      .then((res) => res.json())
+      .then((data) => {
+        const ipAddr = data.ip
+        setIp(ipAddr)
+
+        const count = localStorage.getItem(`upload-count-${ipAddr}`)
+        const parsedCount = Number(count) || 0
+        setUploadCount(parsedCount)
+
+        if (!auth.currentUser && parsedCount >= 5) {
+          toast.warning("Kamu sudah mencapai batas 5x upload tanpa login.")
+        }
+      })
+
+    return () => unsubscribe()
+  }, [])
 
   const setReviewData = useDataReviewStore((state) => state.setReviewData);
   // Helper: Buat preview jika file PDF
@@ -59,6 +89,12 @@ const UploadCv = () => {
     event.preventDefault();
   };
 
+
+  if (!isLoggedIn && uploadCount > 2) {
+    toast.error("Kamu sudah mencapai batas 5x upload tanpa login.")
+    return
+  }
+
   // Upload file ke backend
   const handleUpload = async () => {
     if (!selectedFile) {
@@ -92,11 +128,16 @@ const UploadCv = () => {
         result: res.data.result.data,
       });
 
+      if (!isLoggedIn) {
+        const newCount = uploadCount + 1
+        setUploadCount(newCount)
+        localStorage.setItem(`upload-count-${ip}`, String(newCount))
+      }
+
       const targetRoute = pathname.startsWith("/dashboard")
         ? "/dashboard/hasil"
         : "/hasil";
 
-      router.push(targetRoute);
       router.push(targetRoute);
     } catch (err: any) {
       console.error("Upload gagal:", err.response?.data || err.message);
@@ -215,7 +256,7 @@ const UploadCv = () => {
         <div className="flex justify-start">
           <button
             onClick={handleUpload}
-            disabled={uploading}
+            disabled={uploading || (!isLoggedIn && uploadCount >= 5)}
             className="bg-primaryBlue flex cursor-pointer items-center gap-1 rounded-full px-4 py-2.5 font-medium text-white disabled:opacity-50"
           >
             Prediksi Sekarang
