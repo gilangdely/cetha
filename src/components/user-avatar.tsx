@@ -4,8 +4,9 @@ import { useEffect, useState } from "react"
 import { auth } from "@/app/lib/firebase"
 import Image from "next/image"
 import { AvatarImage } from "@/components/ui/avatar" // pastikan path ini sesuai struktur proyekmu
+import clsx from "clsx"
 
-export default function UserAvatar() {
+export default function UserAvatar({className = ""}) {
   const [photoURL, setPhotoURL] = useState<string | null>(null)
   const [initials, setInitials] = useState<string | null>(null)
 
@@ -28,14 +29,14 @@ export default function UserAvatar() {
   }, [])
 
   return (
-    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+    <div className={clsx(`w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden`, className)}>
       {photoURL ? (
         <Image
           src={photoURL}
           alt="Avatar"
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
+          width={1024}
+          height={1024}
+          className={clsx(`rounded-full object-cover`,className)}
           unoptimized
         />
       ) : initials ? (
