@@ -9,7 +9,7 @@ const validateFile = (file: File | null): string | null => {
     return null;
 };
 
-const getFileUrl = (filename: string): string => `https://firmanaziz-cv2.hf.space/gradio_api/file=${filename}`;
+const getFileUrl = (filename: string): string => `https://firmanaziz-cv3.hf.space/gradio_api/file=${filename}`;
 
 export const POST = async (req: NextRequest) => {
     try {
@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
             return NextResponse.json({ error: validationError }, { status: 400 });
         }
 
-        const app = await Client.connect("firmanaziz/CV2");
+        const app = await Client.connect("firmanaziz/CV3");
         const root = app.config?.root;
         if (!root) {
             throw new Error("Konfigurasi root tidak ditemukan");
@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
         const { files } = await upload_files.call(app, root, [file!]);
         const fileUrl = getFileUrl(files![0]);
 
-        const result = await app.predict("/score_cv", [handle_file(fileUrl)]);
+        const result = await app.predict("/score_cv_json", [handle_file(fileUrl)]);
 
         return NextResponse.json({ result });
     } catch (error: any) {

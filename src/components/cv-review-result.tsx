@@ -26,7 +26,7 @@ export interface Improvement {
 }
 
 
-const GoodThingMd = () => {
+const CvReviewResult = () => {
     const reviewData = useDataReviewStore((state) => state.reviewData);
     const resultData = reviewData?.result?.[0];
 
@@ -178,4 +178,4 @@ const GoodThingMd = () => {
     );
 };
 
-export default GoodThingMd;
+export default CvReviewResult;

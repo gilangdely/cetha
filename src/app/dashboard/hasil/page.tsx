@@ -2,6 +2,7 @@
 
 import GoodThingSection from "@/components/good-things-dashboard";
 import NeedImprovementSection from "@/components/need-improvement-dashboard";
+import CvReviewResult from "@/components/cv-review-result"
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -41,8 +42,9 @@ export default function ReviewCVDashboardPage() {
 
       {/* Sections */}
       <div className="grid gap-8 my-8">
-        <GoodThingSection />
-        <NeedImprovementSection />
+        {/* <GoodThingSection />
+        <NeedImprovementSection /> */}
+        <CvReviewResult></CvReviewResult>
       </div>
     </div>
   );
