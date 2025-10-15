@@ -2,6 +2,7 @@
 
 import GoodThingMd from "@/components/good-things-md";
 import NeedImprovementMd from "@/components/need-improvement-md";
+import CvReviewResult from "@/components/cv-review-result";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -81,8 +82,7 @@ export default function ResultPage() {
 
               {/* Good & Need Improvement Sections */}
               <div className="my-8 space-y-8 sm:mt-12 sm:space-y-12">
-                <GoodThingMd />
-                <NeedImprovementMd />
+                <CvReviewResult></CvReviewResult>
               </div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
