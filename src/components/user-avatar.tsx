@@ -37,6 +37,7 @@ export default function UserAvatar({ className = "" }) {
           width={1024}
           height={1024}
           className={clsx(`rounded-full object-cover`, className)}
+          referrerPolicy="no-referrer"
           unoptimized
         />
       ) : initials ? (

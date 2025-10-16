@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useJobResultStore } from "@/store/jobResultStore";
-import { Briefcase } from "lucide-react";
+import { Briefcase, ChartNoAxesCombined, Handshake, Sparkle, Star, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import JobLinksSection from "@/components/job-link-section";
@@ -72,7 +72,7 @@ export default function HasilRekomendasiPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="mb-10 text-center"
+          className="mb-4 text-center"
         >
           <h1 className="text-TextPrimary text-3xl font-bold">
             Rekomendasi Pekerjaan untuk Kamu
@@ -88,36 +88,78 @@ export default function HasilRekomendasiPage() {
           transition={{ delay: 0.2, duration: 0.4 }}
           className="w-full rounded-2xl bg-white p-5"
         >
-          <div className="mb-6 flex items-center gap-3">
-            <Briefcase className="text-blue-600" size={26} />
-            <h2 className="text-TextPrimary text-2xl font-semibold">
+          <div className="bg-blue-50 mb-6 flex justify-start items-center p-2 rounded-full border-2 border-primaryBlue  gap-3">
+            <div className="bg-blue-500 p-2 rounded-full shadow-inner shadow-white/50">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 5.25L7.113 6.2955C6.606 7.6665 6.3525 8.352 5.85225 8.85225C5.352 9.3525 4.6665 9.606 3.2955 10.113L2.25 10.5L3.2955 10.887C4.6665 11.394 5.352 11.6483 5.85225 12.1478C6.3525 12.6473 6.606 13.3335 7.113 14.7045L7.5 15.75L7.887 14.7045C8.394 13.3335 8.64825 12.648 9.14775 12.1478C9.64725 11.6475 10.3335 11.394 11.7045 10.887L12.75 10.5L11.7045 10.113C10.3335 9.606 9.648 9.3525 9.14775 8.85225C8.6475 8.352 8.394 7.6665 7.887 6.2955L7.5 5.25ZM13.5 2.25L13.3342 2.69775C13.1167 3.28575 13.008 3.57975 12.7943 3.7935C12.5798 4.008 12.2858 4.11675 11.6978 4.3335L11.25 4.5L11.6985 4.66575C12.2857 4.88325 12.5798 4.992 12.7935 5.20575C13.008 5.42025 13.1167 5.71425 13.3335 6.30225L13.5 6.75L13.6658 6.30225C13.8833 5.71425 13.992 5.42025 14.2057 5.2065C14.4202 4.992 14.7142 4.88325 15.3022 4.6665L15.75 4.5L15.3015 4.33425C14.7143 4.11675 14.4202 4.008 14.2065 3.79425C13.992 3.57975 13.8833 3.28575 13.6665 2.69775L13.5 2.25Z" stroke="white" strokeWidth="1.125" strokeLinejoin="round" />
+              </svg>
+
+            </div>
+            <motion.h2
+              className="text-gray-700 text-xl font-semibold"
+              initial={{ x: -40, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
               {jobResult.jabatan_ideal}
-            </h2>
+            </motion.h2>
           </div>
 
-          <NamedSectionResult title="Alasan Kecocokan" list={jobResult.alasan_kecocokan} />
           <NamedSectionResult
+            icon={<Handshake size={16} />}
+            color="amber"
+            className="mt-4"
+            title="Alasan Kecocokan"
+            list={jobResult.alasan_kecocokan}
+          />
+          <NamedSectionResult
+            icon={<Briefcase size={16} />}
+            className="mt-4"
             title="Deskripsi Pekerjaan"
             list={jobResult.deskripsi_pekerjaan}
           />
-          <NamedSectionResult title="Potensi Karier" list={jobResult.potensi_karir} />
+          <NamedSectionResult
+            icon={<ChartNoAxesCombined size={16} />}
+            color="green"
+            className="mt-4"
+            title="Potensi Karier"
+            list={jobResult.potensi_karir}
+          />
+
 
           <h3 className="text-TextPrimary mt-6 text-lg font-semibold">
             Kisaran Gaji
           </h3>
-          <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {Object.entries(jobResult.kisaran_gaji).map(([level, salary]) => (
-              <div
-                key={level}
-                className="rounded-lg bg-blue-50 p-4 text-center"
-              >
-                <p className="text-sm text-gray-500 capitalize">{level}</p>
-                <p className="font-semibold text-blue-700">{salary}</p>
+
+          <div className="mt-6 rounded-xl border border-gray-100 bg-white shadow-sm">
+            <div className="border-b border-gray-100 bg-gray-50 p-4 rounded-t-xl flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600">
+                <Wallet size={16} />
               </div>
-            ))}
+              <h3 className="text-TextPrimary text-lg font-semibold">
+                Kisaran Gaji
+              </h3>
+            </div>
+
+            <div className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {Object.entries(jobResult.kisaran_gaji).map(([level, salary]) => (
+                  <div
+                    key={level}
+                    className="rounded-lg border border-blue-100 p-4 text-center transition-all hover:shadow-md"
+                  >
+                    <p className="text-md font-medium text-gray-500 mb-1 capitalize">{level}</p>
+                    <p className="font-semibold text-lg text-blue-700">{salary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <NamedSectionResult
+            className="mt-4"
+            icon={<Star size={16} />}
+            color="amber"
             title="Kelebihan Tambahan"
             list={jobResult.kelebihan_tambahan}
           />

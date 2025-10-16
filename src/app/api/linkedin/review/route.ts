@@ -9,7 +9,6 @@ const model = genAI.getGenerativeModel({
 
 export async function POST(req: Request) {
   try {
-    // 🔹 Ambil data dari request body
     const body = await req.json();
     const {
       name,
@@ -22,7 +21,6 @@ export async function POST(req: Request) {
       education,
     } = body;
 
-    // 🔹 Validasi input minimal
     if (!name || !headline) {
       return NextResponse.json(
         {
@@ -34,40 +32,52 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔹 Susun bagian pengalaman (max 3 pengalaman terbaru biar efisien)
     const formattedExperience = Array.isArray(experience)
       ? experience
           .slice(0, 3)
           .map(
-            (exp: any, i: number) =>
-              `${i + 1}. ${exp.title || "Tidak diketahui"} di ${
-                exp.companyName || "-"
-              } (${exp.duration || "Durasi tidak diketahui"})
-Deskripsi: ${exp.description || "Tidak ada deskripsi."}`
+            (exp: any, i: number) => ({
+              title: exp.title || "Tidak diketahui",
+              company: exp.companyName || "-",
+              duration: exp.duration || "Durasi tidak diketahui",
+              description: exp.description || "Tidak ada deskripsi",
+            })
           )
-          .join("\n\n")
-      : "Tidak ada data pengalaman.";
+      : [];
 
-    // 🔹 Susun bagian pendidikan (max 2 pendidikan terakhir)
     const formattedEducation = Array.isArray(education)
       ? education
           .slice(0, 2)
-          .map(
-            (edu: any, i: number) =>
-              `${i + 1}. ${edu.degree || "Tidak diketahui"} di ${
-                edu.university || "-"
-              } (${edu.duration || "Durasi tidak diketahui"})`
-          )
-          .join("\n")
-      : "Tidak ada data pendidikan.";
+          .map((edu: any, i: number) => ({
+            degree: edu.degree || "Tidak diketahui",
+            university: edu.university || "-",
+            duration: edu.duration || "Durasi tidak diketahui",
+          }))
+      : [];
 
-    // 🔹 Buat prompt analisis lengkap
+    // 🔹 Buat prompt yang meminta format JSON eksplisit
     const prompt = `
-Kamu adalah asisten karier profesional.
-Analisis profil LinkedIn berikut dan berikan insight singkat:
-1️⃣ 3 kekuatan utama dari profil ini.
-2️⃣ 3 area perbaikan yang direkomendasikan.
-3️⃣ Kesimpulan umum tentang kesesuaian profil ini untuk karier profesional.
+Kamu adalah asisten karier profesional. 
+Analisis profil LinkedIn berikut dan berikan hasil **dalam format JSON**.
+
+Struktur JSON yang harus dikembalikan:
+{
+  "skor_keseluruhan": number (0-100),
+  "penilaian_per_kategori": {
+    "kelengkapan_informasi": number,
+    "keterbacaan_dan_format": number,
+    "dampak_pengalaman_kerja": number
+  },
+  "highlights": [
+    { "point": string, "explanation": string }
+  ],
+  "improvements": [
+    { "point": string, "explanation": string }
+  ],
+  "kesimpulan": string
+}
+
+Gunakan penilaian objektif dan analisis profesional.
 
 DATA PROFIL:
 Nama: ${name}
@@ -78,21 +88,33 @@ Follower: ${followerCount || 0}
 Connections: ${connectionsCount || 0}
 
 PENGALAMAN KERJA:
-${formattedExperience}
+${JSON.stringify(formattedExperience, null, 2)}
 
 PENDIDIKAN:
-${formattedEducation}
+${JSON.stringify(formattedEducation, null, 2)}
+
+Jawab hanya dengan JSON valid.
 `;
 
-    // 🔹 Panggil API Gemini
+    // 🔹 Panggil model Gemini
     const result = await model.generateContent(prompt);
-    const output = result?.response?.text() || "Tidak ada hasil dari Gemini.";
+    const text = result?.response?.text() || "{}";
 
-    // 🔹 Kembalikan hasil analisis ke frontend
+    // 🔹 Bersihkan hasil agar bisa di-parse JSON
+    const cleanJson = text.replace(/```json|```/g, "").trim();
+
+    let parsed;
+    try {
+      parsed = JSON.parse(cleanJson);
+    } catch (e) {
+      console.warn("⚠️ Hasil bukan JSON valid, fallback ke teks.");
+      parsed = { rawText: text };
+    }
+
     return NextResponse.json({
       success: true,
       message: "Analisis berhasil dilakukan.",
-      result: output,
+      result: parsed,
     });
   } catch (error: any) {
     console.error("❌ Error in /api/linkedin/review:", error);

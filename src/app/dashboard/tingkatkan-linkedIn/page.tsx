@@ -12,6 +12,8 @@ import { ArrowRight, Loader2, MapPin, Briefcase } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
+import LinkedInAnalysisResult from "@/components/linkedin-analysis";
+import LinkedInProfileDisplay from "@/components/linkedin-profile-card";
 
 interface Position {
   companyName: string;
@@ -221,153 +223,13 @@ export default function ImproveLinkedInDashboard() {
       </div>
 
       {/* Profile Display */}
-      {profile && (
-        <div className="rounded-lg overflow-hidden bg-white border shadow-sm">
-          {/* Banner */}
-          <div className="relative h-48 w-full">
-            {profile.overview.backgroundImageURL ? (
-              <Image
-                src={profile.overview.backgroundImageURL}
-                alt="Background"
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="bg-gray-200 h-full" />
-            )}
-            <div className="absolute -bottom-16 left-6 flex items-end gap-4">
-              {profile?.overview?.profilePictureURL ? (
-                <Image
-                  src={profile.overview.profilePictureURL}
-                  alt={profile.overview.fullName || "Profile Picture"}
-                  width={120}
-                  height={120}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-[100px] h-[100px] rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
-                  N/A
-                </div>
-              )}
-
-            </div>
-          </div>
-
-          {/* Spacing untuk foto */}
-          <div className="mt-12 p-6">
-            <div className="mb-4">
-              <h2 className="text-2xl font-bold text-gray-900">
-                {profile.overview.fullName}
-              </h2>
-              <p className="text-gray-700">{profile.overview.headline}</p>
-            </div>
-            {/* Tentang */}
-            {profile.details.about && (
-              <section className="mb-4">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">Tentang</h3>
-                <p className="text-gray-700 leading-relaxed text-sm whitespace-pre-line">
-                  {profile.details.about}
-                </p>
-              </section>
-            )}
-
-            <div className="flex gap-4">
-              {profile?.experience && profile.experience.length > 0 && (
-                <div className="mt-10 flex-1">
-                  <h3 className="text-xl font-semibold mb-4">Pengalaman Kerja</h3>
-
-                  {profile.experience.map((exp, index) => (
-                    <div key={index} className="mb-8 border-b pb-9">
-                      <div className="flex gap-4 items-center">
-                        {exp.companyLogo && (
-                          <Image
-                            src={exp.companyLogo}
-                            alt={exp.companyName}
-                            width={48}
-                            height={48}
-                            className="rounded-md border bg-white"
-                          />
-                        )}
-                        <div>
-                          <h4 className="text-lg font-medium">{exp.companyName}</h4>
-                          <p className="text-sm text-gray-500">{exp.totalDuration}</p>
-                          <p className="text-sm text-gray-500">{exp.duration}</p>
-                        </div>
-                      </div>
-
-                      {/* Tampilkan posisi di perusahaan tersebut */}
-                      {exp.positions && exp.positions.length > 0 && (
-                        <div className="mt-3 ml-12 space-y-2">
-                          {exp.positions.map((pos, i) => (
-                            <div key={i}>
-                              <p className="font-semibold">{pos.title}</p>
-                              <p className="text-sm text-gray-600">{pos.duration}</p>
-                              {pos.description && (
-                                <p className="text-sm text-gray-500 mt-1">{pos.description}</p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {profile?.education && profile.education.length > 0 && (
-                <div className="mt-10 flex-1">
-                  <h3 className="text-xl font-semibold mb-4">Pendidikan</h3>
-                  {(showAllEducation ? profile.education : profile.education.slice(0, 2)).map((edu, index) => (
-                    <div key={index} className="mb-8 border-b pb-4">
-                      <div className="flex gap-4 items-center">
-                        <div>
-                          <h4 className="text-lg font-medium">{edu.university}</h4>
-                          <p className="text-sm text-gray-500">{edu.duration}</p>
-                          <p className="text-sm text-gray-500">{edu.degree}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {profile.education.length > 2 && (
-                    <button
-                      className="text-primaryBlue text-sm mt-2 underline"
-                      onClick={() => setShowAllEducation((prev) => !prev)}
-                    >
-                      {showAllEducation ? "Sembunyikan" : "Lihat Semua"}
-                    </button>
-                  )}
-                </div>
-              )}
-
-            </div>
-            {/* Pengalaman */}
-
-            {/* Bahasa */}
-            {profile.details.languages?.languages?.length ? (
-              <section className="mb-6">
-                <h3 className="text-lg font-semibold mb-2 text-gray-800">Bahasa</h3>
-                <ul className="list-disc list-inside text-gray-700 text-sm">
-                  {profile.details.languages.languages.map((lang, i) => (
-                    <li key={i}>
-                      {lang.Language} – <span className="text-gray-500">{lang.Level}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-          </div>
-        </div>
-      )}
-
+       {profile && <LinkedInProfileDisplay profile={profile} />}
       {aiResult && (
-        <div className="mt-6 border rounded-lg p-4 bg-gray-50 whitespace-pre-wrap">
-          <h3 className="font-semibold text-lg mb-2 text-blue-700">Hasil Analisis AI:</h3>
-          <ReactMarkdown >
-            {aiResult}
-          </ReactMarkdown>
-        </div>
+        <LinkedInAnalysisResult
+          result={typeof aiResult === "string" ? JSON.parse(aiResult) : aiResult}
+          className="mt-6"
+        />
       )}
-
     </div>
   );
 }
