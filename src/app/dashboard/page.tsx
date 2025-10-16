@@ -52,16 +52,6 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // 🔄 Tampilkan loading selama status autentikasi belum diketahui
-  if (!authChecked) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-gray-600">Memuat...</p>
-      </div>
-    );
-  }
-
-
   return (
     <div className="min-h-screen p-4 md:px-8 lg:px-10 w-full">
       <div className="mx-auto max-w-7xl">
