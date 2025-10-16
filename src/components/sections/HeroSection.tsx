@@ -13,7 +13,7 @@ const HeroSection = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
-      className="mx-auto flex lg:min-h-screen w-full max-w-7xl items-center"
+      className="mx-auto flex lg:min-h-screen w-full lg:px-6 max-w-7xl items-center"
     >
       <div className="flex w-full flex-col-reverse items-center gap-2 px-6 pt-16 md:pt-24 pb-12 md:flex-row lg:gap-10 lg:px-0 lg:pt-0">
         {/* Left */}

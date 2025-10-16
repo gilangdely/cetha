@@ -5,12 +5,12 @@ import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { usePathname } from "next/navigation";
+import CethaBot from "@/components/cethabot";
 
 export default function Layout(props: { children: ReactNode }) {
   const pathname = usePathname();
 
-  // Jika di halaman /result, jangan tampilkan layout
-  const isExcluded = pathname === "/result";
+  const isExcluded = pathname === "/hasil";
 
   if (isExcluded) {
     return <>{props.children}</>;
@@ -21,6 +21,7 @@ export default function Layout(props: { children: ReactNode }) {
       <Navbar />
       {props.children}
       <Toaster />
+      <CethaBot />
       <Footer />
     </>
   );
