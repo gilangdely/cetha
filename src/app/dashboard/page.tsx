@@ -23,6 +23,7 @@ export default function DashboardPage() {
   const [username, setUsername] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const router = useRouter();
 
   const achivements = [
@@ -44,21 +45,22 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUsername(user.displayName || "Pengguna");
-        setEmail(user.email || "emailpengguna@mail.com");
-      } else {
-        setUsername(null);
-        setEmail(null);
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    const user = auth.currentUser;
+    if (user) {
+      setUsername(user.displayName || "Pengguna");
+      setEmail(user.email || "email@mail.com");
+    }
   }, []);
 
-  if (loading) return null;
+  // 🔄 Tampilkan loading selama status autentikasi belum diketahui
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-lg text-gray-600">Memuat...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen p-4 md:px-8 lg:px-10 w-full">
