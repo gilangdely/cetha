@@ -3,7 +3,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Menu } from "lucide-react";
-import CethaBot from "@/components/cethabot";
+import CethaBot from "@/components/cetha-bot";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </header>
           <main className="flex flex-1 flex-col bg-white lg:p-4 lg:rounded-2xl">
             {children}
-          <CethaBot />
+            <CethaBot />
           </main>
         </div>
       </div>

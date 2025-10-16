@@ -5,7 +5,7 @@ import Navbar from "@/components/ui/Navbar";
 import Footer from "@/components/ui/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { usePathname } from "next/navigation";
-import CethaBot from "@/components/cethabot";
+import CethaBot from "@/components/cetha-bot";
 
 export default function Layout(props: { children: ReactNode }) {
   const pathname = usePathname();
