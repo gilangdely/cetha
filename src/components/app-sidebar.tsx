@@ -57,12 +57,12 @@ const mainMenu = [
     href: "/dashboard",
   },
   {
-    title: "Perbaiki CV",
+    title: "CV Review",
     icon: FileSearch,
     href: "/dashboard/review-cv",
   },
   {
-    title: "Tingkatkan LinkedIn",
+    title: "Improve LinkedIn",
     icon: Linkedin,
     href: "/dashboard/tingkatkan-linkedIn",
   },
@@ -115,18 +115,18 @@ export function AppSidebar() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Menu Utama</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-sm ">Menu Utama</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {mainMenu.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
+                {mainMenu.map((item, i) => (
+                  <SidebarMenuItem key={i}>
+                    <SidebarMenuButton asChild variant={"default"}>
                       <Link
                         href={item.href}
-                        className="hover:bg-accent/50 flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all duration-150"
+                        className="hover:bg-accent/50 flex !hover:text-primaryBlue items-center gap-3 rounded-md px-3 !py-6 text-sm font-medium transition-all duration-150"
                       >
-                        <item.icon className="text-muted-foreground h-4 w-4" />
-                        <span>{item.title}</span>
+                        <item.icon className="text-muted-foreground  !h-6 !w-6" />
+                        <span className="text-gray-600 font-medium">{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -143,7 +143,7 @@ export function AppSidebar() {
                     </div>
                     <div className="p-2">
                       <h3 className="mb-3 text-xs font-semibold text-gray-800">
-                        Coba nilai CV-mu berdasarkan pekerjaan impian mu
+                        Temukan pekerjaan impian sesuai dengan CV kamu
                       </h3>
                       <div>
                         <Link
@@ -160,7 +160,7 @@ export function AppSidebar() {
             </SidebarGroupContent>
           </SidebarGroup>
           <SidebarGroup>
-            <SidebarGroupLabel>Lainnya</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-sm ">Lainnya</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -168,15 +168,15 @@ export function AppSidebar() {
                     <DropdownMenuTrigger asChild>
                       <SidebarMenuButton className="hover:bg-accent/50 flex items-center justify-between rounded-md px-3 py-2 text-sm font-medium">
                         <div className="flex items-center gap-2">
-                          <Settings2 className="text-muted-foreground h-4 w-4" />
-                          <span>Pengaturan</span>
+                          <Settings2 className="text-muted-foreground !h-6 !w-6" />
+                          <span className="text-gray-600 font-medium">Pengaturan</span>
                         </div>
                         <ChevronDown className="h-4 w-4" />
                       </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="min-w-[--radix-popper-anchor-width]">
-                      {lainnyaMenu.map((item) => (
-                        <DropdownMenuItem key={item.title} asChild>
+                      {lainnyaMenu.map((item, i) => (
+                        <DropdownMenuItem key={i} asChild>
                           <Link
                             href={item.href}
                             className="flex items-center gap-2 text-sm"

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useJobResultStore } from "@/store/jobResultStore";
-import { Briefcase } from "lucide-react";
+import { Briefcase, ChartNoAxesCombined, Handshake, IceCream, Icon, Star, Wallet } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -89,14 +89,22 @@ export default function HasilRekomendasiDashboardPage() {
           </div>
 
           <NamedSectionResult
+            icon={<Handshake size={16} />}
+            color="amber"
+            className="mt-4"
             title="Alasan Kecocokan"
             list={jobResult.alasan_kecocokan}
           />
           <NamedSectionResult
+            icon={<Briefcase size={16} />}
+            className="mt-4"
             title="Deskripsi Pekerjaan"
             list={jobResult.deskripsi_pekerjaan}
           />
           <NamedSectionResult
+            icon={<ChartNoAxesCombined size={16} />}
+            color="green"
+            className="mt-4"
             title="Potensi Karier"
             list={jobResult.potensi_karir}
           />
@@ -104,21 +112,41 @@ export default function HasilRekomendasiDashboardPage() {
           <h3 className="text-TextPrimary mt-6 text-lg font-semibold">
             Kisaran Gaji
           </h3>
-          <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {Object.entries(jobResult.kisaran_gaji).map(([level, salary]) => (
-              <div key={level} className="rounded-lg bg-blue-50 p-4 text-center">
-                <p className="text-sm text-gray-500 capitalize">{level}</p>
-                <p className="font-semibold text-blue-700">{salary}</p>
+
+          <div className="mt-6 rounded-xl border border-gray-100 bg-white shadow-sm">
+            <div className="border-b border-gray-100 bg-gray-50 p-4 rounded-t-xl flex items-center gap-2.5">
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600">
+                <Wallet size={16} />
               </div>
-            ))}
+              <h3 className="text-TextPrimary text-lg font-semibold">
+                Kisaran Gaji
+              </h3>
+            </div>
+
+            <div className="p-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {Object.entries(jobResult.kisaran_gaji).map(([level, salary]) => (
+                  <div
+                    key={level}
+                    className="rounded-lg border border-blue-100 p-4 text-center transition-all hover:shadow-md"
+                  >
+                    <p className="text-md font-medium text-gray-500 mb-1 capitalize">{level}</p>
+                    <p className="font-semibold text-lg text-blue-700">{salary}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <NamedSectionResult
+            className="mt-4"
+            icon={<Star size={16} />}
+            color="amber"
             title="Kelebihan Tambahan"
             list={jobResult.kelebihan_tambahan}
           />
 
-          <div className="mt-8">
+          <div className="mt-4">
             <JobLinksSection jobResult={jobResult} />
           </div>
         </motion.div>
