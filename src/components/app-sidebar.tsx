@@ -69,7 +69,7 @@ const mainMenu = [
   {
     title: "Artikel & Video",
     icon: Newspaper,
-    href: "/dashboard/article-and-video",
+    href: "/dashboard/tips-karir",
   },
 ];
 

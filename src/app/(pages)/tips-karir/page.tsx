@@ -20,7 +20,6 @@ import article2 from "@/assets/img/article2.jpg";
 import article3 from "@/assets/img/article3.jpg";
 import article4 from "@/assets/img/article4.jpg";
 
-// Dummy data artikel
 const allArticles = [
   {
     id: 1,
@@ -156,21 +155,19 @@ export default function TipsKarirPage() {
               >
                 <button
                   onClick={() => handleTabChange("artikel")}
-                  className={`flex items-center gap-2 rounded-full px-3 py-2 transition ${
-                    activeTab === "artikel"
+                  className={`flex items-center gap-2 rounded-full px-3 py-2 transition ${activeTab === "artikel"
                       ? "bg-primaryBlue text-white"
                       : "bg-Background text-TextSecondary hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <Book size={18} /> Artikel
                 </button>
                 <button
                   onClick={() => handleTabChange("video")}
-                  className={`flex items-center gap-2 rounded-full px-3 py-2 transition ${
-                    activeTab === "video"
+                  className={`flex items-center gap-2 rounded-full px-3 py-2 transition ${activeTab === "video"
                       ? "bg-primaryBlue text-white"
                       : "bg-Background text-TextSecondary hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <Video size={18} /> Video
                 </button>
