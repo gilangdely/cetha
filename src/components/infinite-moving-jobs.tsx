@@ -96,7 +96,7 @@ const JobCard = ({
     return (
         <figure
             className={cn(
-                "relative h-full w-fit cursor-pointer overflow-hidden rounded-xl border p-4 sm:w-48",
+                "relative h-full w-42 cursor-pointer overflow-hidden rounded-xl border p-4 sm:w-48",
                 "border-gray-950/[.1] bg-gray-50 hover:bg-gray-100",
                 "dark:border-gray-50/[.1] dark:bg-gray-800 dark:hover:bg-gray-700 transition-all"
             )}
@@ -142,12 +142,12 @@ export function InfiniteMovingJobs() {
                         <JobCard key={i} {...job} />
                     ))}
                 </Marquee>
-                <Marquee reverse pauseOnHover className="[--duration:20s]" vertical>
+                <Marquee reverse pauseOnHover className="[--duration:20s] hidden md:flex" vertical>
                     {thirdRow.map((job, i) => (
                         <JobCard key={i} {...job} />
                     ))}
                 </Marquee>
-                <Marquee pauseOnHover className="[--duration:20s]" vertical>
+                <Marquee pauseOnHover className="[--duration:20s]  " vertical>
                     {fourthRow.map((job, i) => (
                         <JobCard key={i} {...job} />
                     ))}
