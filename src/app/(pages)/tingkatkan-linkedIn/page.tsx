@@ -14,6 +14,8 @@ import maskHappy from "@/assets/icons/mask-happy.svg";
 import LinkedInProfileDisplay from "@/components/linkedin-profile-card";
 import LinkedInAnalysisResult from "@/components/linkedin-analysis";
 
+import { auth } from "@/app/lib/firebase";
+
 const cards = [
   {
     id: "1",
@@ -111,7 +113,7 @@ export default function ImproveLinkedInPage() {
   const [ipAddress, setIpAddress] = useState<string>("");
   const [attemptsLeft, setAttemptsLeft] = useState<number>(3);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  
+
   // Dapatkan IP address dan periksa jumlah percobaan yang tersisa
   useEffect(() => {
     const fetchIpAndCheckLimit = async () => {
@@ -121,13 +123,13 @@ export default function ImproveLinkedInPage() {
         const data = await res.json();
         const ip = data.ip;
         setIpAddress(ip);
-        
+
         // Periksa jumlah percobaan dari localStorage
         const key = `linkedin-analysis-count-${ip}`;
         const attemptCount = parseInt(localStorage.getItem(key) || "0");
         const remaining = Math.max(0, 3 - attemptCount);
         setAttemptsLeft(remaining);
-        
+
         // Periksa status login (ganti dengan logika autentikasi yang sebenarnya)
         // Untuk contoh ini diasumsikan user tidak login
         setIsLoggedIn(false);
@@ -135,11 +137,50 @@ export default function ImproveLinkedInPage() {
         console.error("Error fetching IP:", err);
       }
     };
-    
+
     fetchIpAndCheckLimit();
   }, []);
 
+  useEffect(() => {
+    const checkAttempts = async () => {
+      try {
+        // Ambil IP
+        const ipRes = await fetch("/api/ip");
+        const ipData = await ipRes.json();
+        const ip = ipData.ip;
+        setIpAddress(ip);
+
+        // Cek status login (ganti dengan logika auth sebenarnya nanti)
+        const user = auth.currentUser; // ← Jika pakai Firebase
+        setIsLoggedIn(!!user);
+
+        if (user) {
+          // User login → tidak ada batas
+          setAttemptsLeft(Infinity);
+          return;
+        }
+
+        // Untuk user belum login: cek berdasarkan IP
+        const key = `linkedin-attempts-${ip}`;
+        const count = parseInt(localStorage.getItem(key) || "0");
+        const remaining = Math.max(0, 5 - count); // ← ubah jadi 5
+        setAttemptsLeft(remaining);
+      } catch (err) {
+        console.error("Error checking attempts:", err);
+        // Jika gagal, anggap user punya 0 percobaan (aman)
+        setAttemptsLeft(0);
+      }
+    };
+
+    checkAttempts();
+  }, []);
+
   const handleAnalyze = async () => {
+    if (!isLoggedIn && attemptsLeft <= 0) {
+      setError("Kamu sudah mencapai batas maksimal 5 kali analisis. Silakan login untuk melanjutkan.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setProfile(null);
@@ -157,6 +198,12 @@ export default function ImproveLinkedInPage() {
     }
 
     try {
+      if (!isLoggedIn) {
+        const newCount = parseInt(localStorage.getItem(`linkedin-attempts-${ipAddress}`) || "0") + 1;
+        localStorage.setItem(`linkedin-attempts-${ipAddress}`, String(newCount));
+        setAttemptsLeft(Math.max(0, 5 - newCount));
+      }
+
       // 1️⃣ Ambil data LinkedIn lengkap
       const res = await fetch(`/api/linkedin?username=${encodeURIComponent(cleanUsername)}`);
       const data = await res.json();
@@ -208,14 +255,14 @@ export default function ImproveLinkedInPage() {
       setLoading(false);
     }
   };
-  
+
   // Jika sedang menampilkan hasil analisis
   if (showResults) {
     return (
       <div className="w-full p-4 md:px-10 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 mb-6">
-          <button 
-            onClick={() => setShowResults(false)} 
+          <button
+            onClick={() => setShowResults(false)}
             className="text-primaryBlue hover:underline flex items-center"
           >
             <ChevronRight className="rotate-180 mr-1" size={16} /> Kembali
@@ -232,7 +279,7 @@ export default function ImproveLinkedInPage() {
             className="mt-6"
           />
         )}
-        
+
         {/* Tombol Review Lagi */}
         <div className="flex justify-center mt-10 mb-6">
           <button
@@ -324,12 +371,11 @@ export default function ImproveLinkedInPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
-                  <button 
+                  <button
                     onClick={handleAnalyze}
                     disabled={loading}
-                    className={`rounded-full px-4 py-3 text-white transition-colors flex items-center justify-center ${
-                      loading ? "bg-primaryBlue/70 cursor-not-allowed" : "bg-primaryBlue hover:bg-primaryBlue/90"
-                    }`}
+                    className={`rounded-full px-4 py-3 text-white transition-colors flex items-center justify-center ${loading ? "bg-primaryBlue/70 cursor-not-allowed" : "bg-primaryBlue hover:bg-primaryBlue/90"
+                      }`}
                   >
                     {loading ? <Loader2 className="animate-spin" /> : <ArrowRight />}
                   </button>
@@ -337,6 +383,22 @@ export default function ImproveLinkedInPage() {
                 {error && (
                   <div className="mt-4 rounded-lg bg-red-50 border border-red-300 text-red-700 px-4 py-2">
                     {error}
+                  </div>
+                )}
+                {!isLoggedIn && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    {attemptsLeft > 0 ? (
+                      <span>
+                        Kamu punya <span className="font-medium">{attemptsLeft}</span> dari 5 percobaan tersisa.{" "}
+                        <Link href="/login" className="text-primaryBlue hover:underline">
+                          Login
+                        </Link> untuk akses tak terbatas.
+                      </span>
+                    ) : (
+                      <span className="text-red-600 font-medium flex items-center gap-1">
+                        <Lock size={16} /> Batas percobaan habis. Silakan login.
+                      </span>
+                    )}
                   </div>
                 )}
               </motion.div>
