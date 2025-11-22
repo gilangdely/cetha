@@ -1,6 +1,6 @@
 # Cetha
 
-**Membantu Anda tampil 'Cetha' di mata perekrut.**
+**Membantu Anda tampil 'Cetha' di mata recruiter.**
 
 Cetha adalah platform inovatif berbasis AI yang dirancang untuk menjembatani kesenjangan antara pencari kerja dan standar industri. Kami memberikan analisis instan dan rekomendasi praktis untuk membantu Anda mengoptimalkan aset profesional (CV dan LinkedIn) agar sukses menembus *screening* perekrut.
 
