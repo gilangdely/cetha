@@ -11,23 +11,27 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Edit, Check, X } from "lucide-react";
+import { db } from "@/app/lib/firebase";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import { toast } from "sonner";
 
 export type Achievement = {
   id: string;
   title: string;
   category:
-    | "kursus"
-    | "proyek"
-    | "kompetisi"
-    | "open_source"
-    | "organisasi"
-    | "publikasi"
-    | "kinerja"
-    | "skill"
-    | "network"
-    | "penghargaan";
-  description?: string;
-  date?: string;
+  | "kursus"
+  | "proyek"
+  | "kompetisi"
+  | "open_source"
+  | "organisasi"
+  | "publikasi"
+  | "kinerja"
+  | "skill"
+  | "network"
+  | "penghargaan";
+  description?: string | null;
+  date?: string | null;
+  createdAt: string;
 };
 
 interface EditPencapaianProps {
@@ -62,27 +66,71 @@ export default function EditPencapaian({
   const [category, setCategory] = useState<Achievement["category"]>("proyek");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (open) {
-      setTitle(initialData?.title || "");
-      setCategory(initialData?.category || "proyek");
-      setDescription(initialData?.description || "");
-      setDate(initialData?.date || "");
+    if (open && initialData) {
+      setTitle(initialData.title || "");
+      setCategory(initialData.category || "proyek");
+      setDescription(initialData.description || "");
+      setDate(initialData.date || "");
+    } else if (open && !initialData) {
+      // reset form ketika tambah baru
+      setTitle("");
+      setCategory("proyek");
+      setDescription("");
+      setDate("");
     }
   }, [open, initialData]);
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
-    const payload: Achievement = {
-      id: initialData?.id || Date.now().toString(),
-      title: title.trim(),
-      category,
-      description: description.trim() || undefined,
-      date: date || undefined,
-    };
-    onSave(payload);
-    onOpenChange(false);
+  const handleSubmit = async () => {
+    if (!title.trim()) {
+      toast.error("Judul wajib diisi");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const payload: Omit<Achievement, "id"> = {
+        title: title.trim(),
+        category,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Hanya tambahkan jika ada nilai (bukan empty string)
+      if (description.trim()) {
+        payload.description = description.trim();
+      }
+      if (date) {
+        payload.date = date;
+      }
+
+      let savedDoc: Achievement;
+
+      if (initialData?.id) {
+        // MODE EDIT → update document yang sudah ada
+        const docRef = doc(db, "pencapaian", initialData.id);
+        await updateDoc(docRef, payload);
+        savedDoc = { ...payload, id: initialData.id };
+        toast.success("Pencapaian berhasil diperbarui!");
+      } else {
+        // MODE TAMBAH → tambah document baru
+        const docRef = await addDoc(collection(db, "pencapaian"), payload);
+        savedDoc = { ...payload, id: docRef.id };
+        toast.success("Pencapaian berhasil ditambahkan!");
+      }
+
+      // Kirim ke parent kalau memang dibutuhkan (misal untuk refresh list)
+      onSave?.(savedDoc);
+
+      onOpenChange(false);
+    } catch (error: any) {
+      console.error("Error saving achievement:", error);
+      toast.error(error?.message || "Gagal menyimpan ke Firebase");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -110,6 +158,7 @@ export default function EditPencapaian({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Contoh: Merilis Aplikasi BudgetMate"
+              disabled={loading}
             />
           </div>
           <div className="space-y-2">
@@ -123,7 +172,7 @@ export default function EditPencapaian({
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
-                  {cat}
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
                 </option>
               ))}
             </select>
@@ -136,6 +185,7 @@ export default function EditPencapaian({
                 className="w-full rounded-md border px-3 py-2 text-sm"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                disabled={loading}
               />
             </div>
           </div>
@@ -146,6 +196,7 @@ export default function EditPencapaian({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Ringkas pencapaian dan konteksnya"
+              disabled={loading}
             />
           </div>
           <div className="flex gap-3 pt-2">
