@@ -159,7 +159,7 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-          <SidebarGroup>
+          {/* <SidebarGroup>
             <SidebarGroupLabel className="text-sm ">Lainnya</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -191,7 +191,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
-          </SidebarGroup>
+          </SidebarGroup> */}
         </SidebarContent>
         <SidebarFooter>
           <DropdownMenu>
