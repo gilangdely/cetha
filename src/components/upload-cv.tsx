@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useDataReviewStore } from "@/store/dataReviewStore";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useUploadStore } from "@/store/uploadStore";
 
 import { toast } from "sonner";
 import { Badge } from "./ui/badge";
@@ -19,9 +20,10 @@ import { auth } from "@/app/lib/firebase";
 const UploadCv = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const uploading = useUploadStore((s) => s.uploading);
+  const setGlobalUploading = useUploadStore((s) => s.setUploading);
+  const setProgressGlobal = useUploadStore((s) => s.setProgress);
   const [uploadEnabled, setUploadEnabled] = useState(true);
-  const [progress, setProgress] = useState<number>(0);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -88,7 +90,7 @@ const UploadCv = () => {
     event.preventDefault();
   };
 
-  if (!isLoggedIn && uploadCount > 2) {
+  if (!isLoggedIn && uploadCount >= 5) {
     toast.error("Kamu sudah mencapai batas 5x upload tanpa login.");
     return;
   }
@@ -104,8 +106,8 @@ const UploadCv = () => {
     formData.append("file", selectedFile, selectedFile.name);
 
     try {
-      setUploading(true);
-      setProgress(0);
+      setGlobalUploading(true, "cv");
+      setProgressGlobal(0);
 
       const res = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -113,7 +115,7 @@ const UploadCv = () => {
           const percent = event.total
             ? Math.round((event.loaded * 100) / event.total)
             : 0;
-          setProgress(percent);
+          setProgressGlobal(percent);
         },
       });
 
@@ -141,7 +143,7 @@ const UploadCv = () => {
       console.error("Upload gagal:", err.response?.data || err.message);
       toast.error("Gagal Upload");
     } finally {
-      setUploading(false);
+      setGlobalUploading(false);
     }
   };
 
@@ -258,7 +260,7 @@ const UploadCv = () => {
       </div>
 
       {/* Button Upload */}
-      <div className="mx-auto w-full pt-4 pb-12">
+      <div className="mx-auto w-full pt-10 pb-12 md:pt-4">
         <div className="flex justify-end lg:justify-start">
           <button
             onClick={handleUpload}
@@ -270,7 +272,6 @@ const UploadCv = () => {
           </button>
         </div>
       </div>
-      {uploading && <LoadingScreen progress={progress} type="cv" />}
     </div>
   );
 };

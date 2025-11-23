@@ -1,6 +1,5 @@
 "use client";
 
-import LoadingScreen from "@/components/loading-screen";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
@@ -13,12 +12,14 @@ import logo from "@/assets/icons/upload-docs.svg";
 import office from "@/assets/icons/office-docsx.svg";
 import { auth } from "@/app/lib/firebase";
 import { useJobResultStore } from "@/store/jobResultStore";
+import { useUploadStore } from "@/store/uploadStore";
 
 const UploadJobs = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState<number>(0);
+  const uploading = useUploadStore((s) => s.uploading);
+  const setGlobalUploading = useUploadStore((s) => s.setUploading);
+  const setProgressGlobal = useUploadStore((s) => s.setProgress);
   const [uploadEnabled, setUploadEnabled] = useState(true);
 
   const [ip, setIp] = useState("");
@@ -91,8 +92,8 @@ const UploadJobs = () => {
     formData.append("file", selectedFile, selectedFile.name);
 
     try {
-      setUploading(true);
-      setProgress(0);
+      setGlobalUploading(true, "job");
+      setProgressGlobal(0);
 
       const res = await axios.post("/api/jobrecommend", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -100,7 +101,7 @@ const UploadJobs = () => {
           const percent = event.total
             ? Math.round((event.loaded * 100) / event.total)
             : 0;
-          setProgress(percent);
+          setProgressGlobal(percent);
         },
       });
 
@@ -128,7 +129,7 @@ const UploadJobs = () => {
       console.error("❌ Upload gagal:", err.response?.data || err.message);
       toast.error("Gagal mengunggah atau menganalisis CV");
     } finally {
-      setUploading(false);
+      setGlobalUploading(false);
     }
   };
 
@@ -256,8 +257,6 @@ const UploadJobs = () => {
           </button>
         </div>
       </div>
-
-      {uploading && <LoadingScreen progress={progress} type="job" />}
     </div>
   );
 };
