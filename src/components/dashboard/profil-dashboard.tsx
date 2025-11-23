@@ -117,7 +117,7 @@ export default function ProfilDashboard({
                 {username || "Kamu belum login"}
               </h2>
               <p className="text-gray-600">{email}</p>
-              <p className="mt-2 font-medium text-blue-600 capitalize gap-2 flex flex-wrap gap-2">
+              <div className="mt-2 font-medium text-blue-600 capitalize flex flex-wrap gap-2">
                 {(userData?.role || []).length > 0 ? (
                   userData!.role!.map((r) => (
                     <span
@@ -132,7 +132,7 @@ export default function ProfilDashboard({
                 ) : (
                   <p className="text-sm text-gray-400">Belum ada role.</p>
                 )}
-              </p>
+              </div>
             </div>
             <div className="flex gap-2">
               <button
