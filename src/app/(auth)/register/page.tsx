@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { toast } from "sonner";
 
 import AuthCarousel from "@/components/auth-carousel";
+import { loginWithGoogle } from "@/app/lib/auth";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -42,6 +43,17 @@ export default function RegisterPage() {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = async () => {
+      try {
+        const user = await loginWithGoogle();
+        toast(`Selamat datang, ${user.displayName}`);
+        router.push("/dashboard");
+      } catch (error: any) {
+        console.error("Error saat login Google:", error);
+        toast(`Gagal login: ${error.message}`);
+      }
+    };
 
   return (
     <main className="flex h-screen max-w-screen bg-[#F9FAFB]">
@@ -124,7 +136,7 @@ export default function RegisterPage() {
                 {errorMsg && (
                   <p className="mt-2 text-sm text-red-500">{errorMsg}</p>
                 )}
-
+ 
                 <div className="flex items-center gap-6">
                   <div className="h-0.5 w-full rounded-lg bg-gray-200" />
                   <div className="text-TextSecondary text-sm">atau</div>
@@ -132,7 +144,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="flex w-full flex-col gap-4 lg:flex-row">
-                  <div className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#E0E1E2] bg-[#F9FAFB]">
+                  <button onClick={handleGoogleLogin} className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border-2 border-[#E0E1E2] bg-[#F9FAFB]">
                     <svg className="h-5 w-5" viewBox="0 0 48 48">
                       <path
                         fill="#fbc02d"
@@ -154,7 +166,7 @@ export default function RegisterPage() {
                     <p className="text-TextPrimary font-medium">
                       Login dengan Google
                     </p>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>

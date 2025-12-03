@@ -1,3 +1,4 @@
+// filepath: d:\Projectan\cetha\src\components\upload-cv.tsx
 "use client";
 
 import LoadingScreen from "@/components/loading-screen";
@@ -16,6 +17,9 @@ import logo from "@/assets/icons/upload-docs.svg";
 import office from "@/assets/icons/office-docsx.svg";
 
 import { auth } from "@/app/lib/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { storage, db } from "@/app/lib/firebase"; // Sesuaikan path Firebase config
 
 const UploadCv = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -55,6 +59,51 @@ const UploadCv = () => {
   }, []);
 
   const setReviewData = useDataReviewStore((state) => state.setReviewData);
+
+  // Interface untuk hasil review CV
+  interface CvReview {
+    id: string;
+    userId: string;
+    fileName: string;
+    fileUrl: string;
+    fileType: string;
+    result: any;
+    createdAt: string;
+  }
+
+  const uploadToCloudinary = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!); // Unsigned preset
+      formData.append("cloud_name", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!);
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!}/raw/upload`); // 'raw' untuk non-image (PDF/DOCX)
+
+      // Progress tracking
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percent = Math.round((event.loaded * 100) / event.total);
+          setProgressGlobal(percent);
+        }
+      };
+
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          const result = JSON.parse(xhr.responseText);
+          console.log("Cloudinary upload sukses:", result.secure_url);
+          resolve(result.secure_url); // URL permanen
+        } else {
+          reject(new Error(`Upload gagal: ${xhr.status} - ${xhr.responseText}`));
+        }
+      };
+
+      xhr.onerror = () => reject(new Error("Koneksi gagal"));
+      xhr.send(formData);
+    });
+  };
+
   // Helper: Buat preview jika file PDF
   const generatePreview = (file: File) => {
     if (file.type === "application/pdf") {
@@ -86,19 +135,91 @@ const UploadCv = () => {
     generatePreview(file);
   };
 
+  const saveReviewToFirestore = async (fileUrl: string, result: any) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    try {
+      const reviewData: Omit<CvReview, "id"> = {
+        userId: user.uid,
+        fileName: selectedFile!.name,
+        fileUrl,
+        fileType: selectedFile!.type,
+        result,
+        createdAt: new Date().toISOString(),
+      };
+
+      await addDoc(collection(db, "cvReviews"), reviewData);
+      console.log("Review saved to Firestore");
+    } catch (error) {
+      console.error("Firestore save error:", error);
+      toast.error("Gagal simpan hasil review");
+    }
+  };
+
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
+
+  const progress = useUploadStore((s) => s.progress);
+  if (uploading) {
+    return <LoadingScreen progress={progress} type="cv" />;
+  }
 
   if (!isLoggedIn && uploadCount >= 5) {
     toast.error("Kamu sudah mencapai batas 5x upload tanpa login.");
     return;
   }
 
-  // Upload file ke backend
+  // Fungsi simpan file ke Firebase Storage
+  const uploadToStorage = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const user = auth.currentUser;
+      if (!user) {
+        reject(new Error("User harus login"));
+        return;
+      }
+
+      const fileName = `${Date.now()}-${file.name}`;
+      const storageRef = ref(storage, `cv-files/${user.uid}/${fileName}`);
+
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = snapshot.totalBytes
+            ? Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+            : 0;
+          setProgressGlobal(percent);
+        },
+        (error) => {
+          console.error("Storage upload error:", error);
+          reject(error);
+        },
+        async () => {
+          try {
+            const downloadURL = await getDownloadURL(storageRef);
+            resolve(downloadURL);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      );
+    });
+  };
+
+
+  // Upload file ke backend (setelah simpan ke Storage)
   const handleUpload = async () => {
     if (!selectedFile) {
       toast.error("Pilih file terlebih dahulu!");
+      return;
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+      toast.error("Login untuk menyimpan hasil review");
       return;
     }
 
@@ -109,22 +230,34 @@ const UploadCv = () => {
       setGlobalUploading(true, "cv");
       setProgressGlobal(0);
 
+      // Langkah 1: Simpan ke Cloudinary
+      toast.info("Mengupload file ke cloud...");
+      const fileUrl = await uploadToCloudinary(selectedFile);
+      setProgressGlobal(50);
+      toast.info("File disimpan, memproses review...");
+
+      // Langkah 2: Kirim ke backend untuk review
       const res = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000,
         onUploadProgress: (event) => {
           const percent = event.total
             ? Math.round((event.loaded * 100) / event.total)
             : 0;
-          setProgressGlobal(percent);
+          setProgressGlobal(50 + (percent / 2));
         },
       });
 
-      toast.success("File berhasil diunggah!");
+      // Langkah 3: Simpan hasil ke Firestore
+      await saveReviewToFirestore(fileUrl, res.data.result.data);
+
+      toast.success("Review CV selesai dan disimpan!");
       console.log("Respon server:", res.data);
+
       setReviewData({
         fileName: selectedFile.name,
         fileType: selectedFile.type,
-        fileUrl: "",
+        fileUrl,
         result: res.data.result.data,
       });
 
@@ -140,10 +273,14 @@ const UploadCv = () => {
 
       router.push(targetRoute);
     } catch (err: any) {
-      console.error("Upload gagal:", err.response?.data || err.message);
-      toast.error("Gagal Upload");
+      console.error("Upload gagal detail:", {
+        message: err.message,
+        fileSize: selectedFile?.size,
+      });
+      toast.error(err.message || "Gagal Upload. Coba lagi.");
     } finally {
       setGlobalUploading(false);
+      setProgressGlobal(0);
     }
   };
 
@@ -267,7 +404,7 @@ const UploadCv = () => {
             disabled={uploading || (!isLoggedIn && uploadCount >= 5)}
             className="bg-primaryBlue flex cursor-pointer items-center gap-1 rounded-full px-4 py-2.5 font-medium text-white disabled:opacity-50"
           >
-            Prediksi Sekarang
+            {uploading ? "Memproses..." : "Prediksi Sekarang"}
             <ChevronRight size={18} />
           </button>
         </div>

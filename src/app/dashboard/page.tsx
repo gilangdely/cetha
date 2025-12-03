@@ -32,6 +32,7 @@ import EditTargetKarir from "@/components/dashboard/edit-target-karir";
 import TargetKarir from "@/components/dashboard/target-karir";
 import PencapaianTerbaru from "@/components/dashboard/pencapaian";
 import ProfilDashboard from "@/components/dashboard/profil-dashboard";
+import ActivityHistory from "@/components/activity-history";
 
 export default function DashboardPage() {
   const [username, setUsername] = useState<string | null>(null);
@@ -82,7 +83,7 @@ export default function DashboardPage() {
           <ProfilDashboard username={username} email={email} skills={skills} />
 
           {/* Activity */}
-          <div className="rounded-xl bg-white p-6 shadow-md lg:col-span-5">
+          {/* <div className="rounded-xl bg-white p-6 shadow-md lg:col-span-5">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center">
                 <Clock className="mr-2 inline text-blue-600" />
@@ -122,7 +123,8 @@ export default function DashboardPage() {
               Coba fitur lain di Cetha buat ningkatin kemampuan dan karir kamu
               ✨
             </p>
-          </div>
+          </div> */}
+          <ActivityHistory />
         </div>
 
         {/* Career Progress & Achievements & Next Steps */}

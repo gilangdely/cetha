@@ -1,3 +1,4 @@
+// filepath: d:\Projectan\cetha\src\app\dashboard\review-cv\page.tsx
 "use client";
 
 import {
@@ -31,7 +32,7 @@ export default function ReviewCVDashboard() {
         </h2>
         <p className="text-TextSecondary mt-2 max-w-2xl text-base">
           Dapatkan feedback otomatis dari AI agar CV kamu makin standout di mata
-          recruiter.
+          recruiter. Hasil review akan disimpan untuk dilihat kembali.
         </p>
       </div>
       <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
@@ -40,6 +41,7 @@ export default function ReviewCVDashboard() {
         </h3>
         <p className="text-TextSecondary mb-6 text-sm">
           Unggah file CV dalam format PDF untuk mendapatkan penilaian otomatis.
+          File akan disimpan aman di cloud.
         </p>
         <UploadCv />
       </div>

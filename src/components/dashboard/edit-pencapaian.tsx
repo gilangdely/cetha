@@ -14,6 +14,7 @@ import { PlusCircle, Edit, Check, X } from "lucide-react";
 import { db } from "@/app/lib/firebase";
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { toast } from "sonner";
+import { auth } from "@/app/lib/firebase";
 
 export type Achievement = {
   id: string;
@@ -31,6 +32,7 @@ export type Achievement = {
   | "penghargaan";
   description?: string | null;
   date?: string | null;
+  userId: string;
   createdAt: string;
 };
 
@@ -89,12 +91,20 @@ export default function EditPencapaian({
       return;
     }
 
+    const user = auth.currentUser;
+    if (!user) {
+      toast.error("Anda harus login untuk menyimpan pencapaian");
+      onOpenChange(false);
+      return;
+    }
+
     setLoading(true);
 
     try {
       const payload: Omit<Achievement, "id"> = {
         title: title.trim(),
         category,
+        userId: user.uid,
         createdAt: new Date().toISOString(),
       };
 
@@ -109,7 +119,10 @@ export default function EditPencapaian({
       let savedDoc: Achievement;
 
       if (initialData?.id) {
-        // MODE EDIT → update document yang sudah ada
+        // MODE EDIT → update document yang sudah ada (pastikan userId tidak berubah)
+        if (initialData.userId !== user.uid) {
+          throw new Error("Anda tidak memiliki izin untuk mengedit pencapaian ini");
+        }
         const docRef = doc(db, "pencapaian", initialData.id);
         await updateDoc(docRef, payload);
         savedDoc = { ...payload, id: initialData.id };
